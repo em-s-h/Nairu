@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="512pt"
+   height="512pt"
+   viewBox="0 0 512 512"
+   preserveAspectRatio="xMidYMid"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <metadata
+     id="metadata1">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="matrix(0.26,0,0,-0.26,-409.6,921.6)"
+     fill="#000000"
+     stroke="none"
+     id="g1">
+    <path
+       d="m 2077,2672 -477,-477 113,-113 c 62,-61 115,-112 119,-112 4,0 169,163 368,363 l 360,362 360,-362 c 199,-200 364,-363 368,-363 4,0 58,51 120,113 l 112,112 -478,478 c -262,262 -479,477 -482,477 -3,0 -220,-215 -483,-478 z"
+       id="path1" />
+  </g>
+</svg>

@@ -1,0 +1,101 @@
+[gd_scene load_steps=9 format=3 uid="uid://chlrgnqu5m6em"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_hmnwy"]
+[ext_resource type="Script" path="res://scripts/text_editor.gd" id="2_5mcdh"]
+[ext_resource type="PackedScene" uid="uid://jg1bxsdjljwm" path="res://scenes/notes_panel.tscn" id="2_se7sq"]
+[ext_resource type="PackedScene" uid="uid://edhbtx5sla6w" path="res://scenes/settings_panel.tscn" id="3_j4jlk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ra8a"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2vyw"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.101961, 0.101961, 0.101961, 0)
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p61a0"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.101961, 0.101961, 0.101961, 0)
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="Theme" id="Theme_x1klu"]
+TextEdit/colors/background_color = Color(1, 1, 1, 1)
+TextEdit/colors/caret_color = Color(0, 0, 0, 1)
+TextEdit/colors/font_color = Color(0, 0, 0, 1)
+TextEdit/colors/font_outline_color = Color(0, 0, 0, 0)
+TextEdit/colors/font_selected_color = Color(1, 1, 1, 1)
+TextEdit/colors/selection_color = Color(0, 0, 0, 1)
+TextEdit/styles/focus = SubResource("StyleBoxFlat_0ra8a")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_s2vyw")
+TextEdit/styles/read_only = SubResource("StyleBoxFlat_p61a0")
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_x1klu")
+script = ExtResource("1_hmnwy")
+
+[node name="NotesPanel" parent="." instance=ExtResource("2_se7sq")]
+visible = false
+layout_mode = 1
+
+[node name="SettingsPanel" parent="." instance=ExtResource("3_j4jlk")]
+visible = false
+layout_mode = 1
+
+[node name="VScrollBar" type="VScrollBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextEdit" type="TextEdit" parent="VScrollBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_5mcdh")
