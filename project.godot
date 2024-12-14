@@ -10,16 +10,22 @@ config_version=5
 
 [application]
 
-config/name="entevis"
+config/name="ntmae"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [display]
 
 window/size/viewport_width=720
 window/size/viewport_height=822
+window/subwindows/embed_subwindows=false
 window/handheld/orientation=1
+
+[global_group]
+
+Persist="Nodes to save"
 
 [input]
 

@@ -1,0 +1,278 @@
+[gd_scene load_steps=12 format=3 uid="uid://cpg2cvm3041aq"]
+
+[ext_resource type="Script" path="res://scripts/note_button.gd" id="1_4xlr2"]
+[ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/default.tres" id="1_rk1oo"]
+[ext_resource type="Texture2D" uid="uid://d2wndtya3tdyx" path="res://icons/dots.svg" id="2_qdfx8"]
+[ext_resource type="PackedScene" uid="uid://cw5hepbv7468v" path="res://scenes/note_button_settings_popup.tscn" id="3_0nidw"]
+
+[sub_resource type="Animation" id="Animation_rnss3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("NoteButtonSettingsPopup:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("NoteButtonSettingsPopup:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("NoteButtonSettingsPopup:process_mode")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HBoxContainer/NoteSettingsButton:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_my278"]
+resource_name = "close_settings"
+length = 0.35
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("NoteButtonSettingsPopup:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.35),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("NoteButtonSettingsPopup:modulate")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0.247059), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("NoteButtonSettingsPopup:process_mode")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.35),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [4, 0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HBoxContainer/NoteSettingsButton:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.35),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_bvm7o"]
+resource_name = "open_settings"
+length = 0.35
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("NoteButtonSettingsPopup:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("NoteButtonSettingsPopup:modulate")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 0.2, 0.35),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.247059), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("NoteButtonSettingsPopup:process_mode")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.35),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [4, 0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HBoxContainer/NoteSettingsButton:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.35),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_muea8"]
+_data = {
+"RESET": SubResource("Animation_rnss3"),
+"close_settings": SubResource("Animation_my278"),
+"open_settings": SubResource("Animation_bvm7o")
+}
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gytds"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d1uc7"]
+content_margin_top = 8.0
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_18cra"]
+content_margin_top = 8.0
+bg_color = Color(0.101961, 0.101961, 0.101961, 0)
+border_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="NoteButton" type="Button" groups=["Persist"]]
+custom_minimum_size = Vector2(200, 65)
+offset_right = 200.0
+offset_bottom = 65.0
+size_flags_horizontal = 6
+size_flags_vertical = 0
+theme = ExtResource("1_rk1oo")
+script = ExtResource("1_4xlr2")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+layout_mode = 2
+offset_right = 200.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_muea8")
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+offset_right = 200.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NoteSettingsButton" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(50, 43)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_gytds")
+icon = ExtResource("2_qdfx8")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 10
+theme_override_styles/focus = SubResource("StyleBoxFlat_d1uc7")
+theme_override_styles/read_only = SubResource("StyleBoxFlat_d1uc7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_18cra")
+editable = false
+expand_to_text_length = true
+context_menu_enabled = false
+
+[node name="CreationDate" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+text = "30/10/2020"
+
+[node name="NoteButtonSettingsPopup" parent="." instance=ExtResource("3_0nidw")]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -75.0
+offset_right = 75.0
+grow_horizontal = 2
+
+[connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="pressed" from="HBoxContainer/NoteSettingsButton" to="." method="_on_note_settings_button_pressed"]
+[connection signal="focus_entered" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_focus_entered"]
+[connection signal="focus_exited" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_focus_exited"]
+[connection signal="gui_input" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_gui_input"]
+[connection signal="text_changed" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_text_changed"]
+[connection signal="text_submitted" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_text_submitted"]
+[connection signal="delete" from="NoteButtonSettingsPopup" to="." method="_on_note_button_settings_popup_delete"]
+[connection signal="rename" from="NoteButtonSettingsPopup" to="." method="_on_note_button_settings_popup_rename"]
+[connection signal="save_to" from="NoteButtonSettingsPopup" to="." method="_on_note_button_settings_popup_save_to"]
