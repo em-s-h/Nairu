@@ -10,14 +10,14 @@ enum DateFormat {
 }
 
 enum NoteSort {
-    DATE_ASCENDING,
     DATE_DESCENDING,
-    NAME_ASCENDING,
+    DATE_ASCENDING,
     NAME_DESCENDING,
+    NAME_ASCENDING,
 }
 
-signal edit_note(contents)
-signal note_deleted()
+signal edit_note(contents: String)
+signal note_deleted(is_current: bool)
 
 var NoteButtonScene = preload("res://scenes/note_button.tscn")
 
@@ -27,6 +27,7 @@ var note_sort := NoteSort.DATE_DESCENDING
 
 var previous_note: String = ""
 var current_note: String = ""
+var keep_open := false
 
 @onready var notes_container = $VBoxContainer/Notes/ScrollContainer/VBoxContainer
 # var notes = []
@@ -52,7 +53,7 @@ func _ready() -> void:
     printerr("Err: '%s'" % DirAccess.get_open_error())
 
     note_directory = DEFAULT_NOTE_DIRECTORY
-    dir = DirAccess.open(note_directory)
+    dir = DirAccess.open("user://")
     if !dir.dir_exists("./notes"):
         dir.make_dir("./notes")
         return
@@ -79,12 +80,6 @@ func open_last_edited_note() -> bool:
 
     return true
 # }}}
-
-# func create_and_open_new_note():
-#     # {{{
-#     create_new_note()
-#     edit_note.emit(" ")
-# # }}}
 
 func format_date(date, from, to) -> String:
     # {{{
@@ -130,11 +125,14 @@ func get_settings():
         "note_directory" : note_directory,
         "previous_note" : current_note,
         "date_format" : date_format,
+        "note_sort" : note_sort,
+        "keep_open" : keep_open,
     }
 # }}}
 
 func reload_settings():
     # {{{
+    $VBoxContainer/Opts/VBoxContainer/Sort.select(note_sort as int)
     sort_notes()
 # }}}
 
@@ -173,9 +171,10 @@ func _on_create_pressed() -> void:
     sort_notes()
 # }}}
 
-func _on_import_pressed() -> void:
+func _on_sort_item_selected(index: int) -> void:
     # {{{
-    pass
+    note_sort = $VBoxContainer/Opts/VBoxContainer/Sort.get_item_id(index) as NoteSort
+    sort_notes()
 # }}}
 
 
@@ -250,7 +249,7 @@ func _on_note_button_delete_note(note_name):
     for n in notes_container.get_children():
         if n.note_name == note_name:
             n.queue_free()
-            note_deleted.emit()
+            note_deleted.emit(path == current_note)
             return
 # }}}
 
@@ -268,3 +267,5 @@ func _on_text_editor_save_note(note_contents):
     file.store_string(note_contents)
     file.close()
 # }}}
+
+

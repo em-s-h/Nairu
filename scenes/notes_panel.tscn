@@ -48,6 +48,7 @@ anchor_bottom = 1.0
 offset_right = 210.0
 grow_vertical = 2
 theme = ExtResource("1_ucgnq")
+theme_type_variation = &"NotesPanel"
 script = ExtResource("1_bq6l0")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -91,11 +92,37 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Create new"
 
-[node name="Import" type="Button" parent="VBoxContainer/Opts/VBoxContainer"]
+[node name="Sort" type="OptionButton" parent="VBoxContainer/Opts/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "Import"
+tooltip_text = "Note sorting method."
+alignment = 2
+icon_alignment = 1
+selected = 0
+item_count = 5
+popup/item_0/text = "Date (9-0)"
+popup/item_1/id = 1
+popup/item_1/separator = true
+popup/item_2/text = "Date (0-9)"
+popup/item_2/id = 1
+popup/item_3/text = "Name (Z-A)"
+popup/item_3/id = 2
+popup/item_4/text = "Name (A-Z)"
+popup/item_4/id = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/Opts/VBoxContainer/Sort"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -12.0
+offset_right = 94.0
+offset_bottom = 11.0
+grow_vertical = 2
+text = "Sort:"
+vertical_alignment = 1
 
 [node name="Notes" type="Panel" parent="VBoxContainer"]
 layout_mode = 2
@@ -117,4 +144,4 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [connection signal="pressed" from="VBoxContainer/Opts/VBoxContainer/Create" to="." method="_on_create_pressed"]
-[connection signal="pressed" from="VBoxContainer/Opts/VBoxContainer/Import" to="." method="_on_import_pressed"]
+[connection signal="item_selected" from="VBoxContainer/Opts/VBoxContainer/Sort" to="." method="_on_sort_item_selected"]

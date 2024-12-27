@@ -1,0 +1,128 @@
+[gd_scene load_steps=3 format=3 uid="uid://cuvx8mq52xkhh"]
+
+[ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/default.tres" id="1_v7k1u"]
+[ext_resource type="Script" path="res://scripts/text_editor_settings.gd" id="2_d4yq6"]
+
+[node name="TextEditorSettings" type="Panel"]
+custom_minimum_size = Vector2(0, 369)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_v7k1u")
+script = ExtResource("2_d4yq6")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = -20.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Font
+"
+
+[node name="Font" type="Button" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+text = "To-do"
+
+[node name="Label2" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Font size
+"
+
+[node name="FontSize" type="LineEdit" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+theme_type_variation = &"SettingLineEdit"
+text = "16"
+alignment = 2
+max_length = 4
+
+[node name="Label3" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Auto save
+"
+
+[node name="AutoSave" type="CheckButton" parent="ScrollContainer/GridContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+button_pressed = true
+
+[node name="Label4" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Line numbers"
+
+[node name="LineNumbers" type="CheckButton" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+
+[node name="Label5" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Line spacing"
+
+[node name="LineSpacing" type="LineEdit" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+theme_type_variation = &"SettingLineEdit"
+text = "3"
+alignment = 2
+max_length = 4
+
+[node name="Label6" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Editor mode
+"
+
+[node name="EditorMode" type="OptionButton" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+flat = true
+selected = 0
+item_count = 2
+popup/item_0/text = "Normal"
+popup/item_1/text = "Vim"
+popup/item_1/id = 1
+
+[connection signal="text_submitted" from="ScrollContainer/GridContainer/FontSize" to="." method="_on_font_size_text_submitted"]
+[connection signal="toggled" from="ScrollContainer/GridContainer/AutoSave" to="." method="_on_auto_save_toggled"]
+[connection signal="toggled" from="ScrollContainer/GridContainer/LineNumbers" to="." method="_on_line_numbers_toggled"]
+[connection signal="text_submitted" from="ScrollContainer/GridContainer/LineSpacing" to="." method="_on_line_spacing_text_submitted"]
+[connection signal="item_selected" from="ScrollContainer/GridContainer/EditorMode" to="." method="_on_editor_mode_item_selected"]

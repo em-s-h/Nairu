@@ -27,6 +27,10 @@ window/handheld/orientation=1
 
 Persist="Nodes to save"
 
+[gui]
+
+theme/custom="res://themes/default.tres"
+
 [input]
 
 shortcut_save_note={

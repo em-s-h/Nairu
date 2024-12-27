@@ -13,6 +13,7 @@ var current_date_format := NotesPanel.DateFormat.DAY_MONTH_YEAR
 
 @onready var settings_popup = $NoteButtonSettingsPopup
 @onready var title = $HBoxContainer/VBoxContainer/Title
+@onready var date = $HBoxContainer/VBoxContainer/CreationDate
 
 var settings_popup_global_pos: Vector2
 var settings_popup_open := false
@@ -23,23 +24,25 @@ var warning_popup_open := false
 func _ready() -> void:
     # {{{
     title.text = note_name
+    date.text = creation_date
 # }}}
 
 func _process(delta: float) -> void:
     # {{{
     if open_settings_popup and !settings_popup_open:
         $AnimationPlayer.play("open_settings")
-        move_settings_popup_y(-120, delta)
+        move_settings_popup_y(-122, delta)
 
     elif !open_settings_popup and settings_popup_open:
         $AnimationPlayer.play("close_settings")
-        move_settings_popup_y(120, delta)
+        move_settings_popup_y(122, delta)
 # }}}
 
 func initialize(_name, _date, _date_format):
     # {{{
     note_name = _name
     name = _name
+
     creation_date = _date
     current_date_format = _date_format
 # }}}
@@ -54,7 +57,7 @@ func move_settings_popup_y(quant, delta):
 
     if global_position.x - settings_popup.size.x < 0:
         positive = !positive
-        quant = size.y + 6
+        quant = size.y + 8
         quant *= 1 if positive else -1
 
     var target = start + quant
@@ -190,6 +193,8 @@ func _on_note_button_settings_popup_delete() -> void:
     confirm_dialog.get_ok_button().pressed.connect(_on_confirm_dialog_confirm)
 
     add_child(confirm_dialog)
+    for c in confirm_dialog.get_children(true):
+        if c is Panel: c.remove_theme_stylebox_override("panel")
 # }}}
 
 func _on_confirm_dialog_confirm():
@@ -209,7 +214,3 @@ func _on_note_button_settings_popup_save_to() -> void:
     $AnimationPlayer.play("close_settings")
     printerr("To-do: get file dialog and make a custom path")
 # }}}
-
-
-
-
