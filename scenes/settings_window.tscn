@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://edhbtx5sla6w"]
+[gd_scene load_steps=5 format=3 uid="uid://edhbtx5sla6w"]
 
 [ext_resource type="Script" path="res://scripts/settings_window.gd" id="1_wkylp"]
 [ext_resource type="PackedScene" uid="uid://cuvx8mq52xkhh" path="res://scenes/text_editor_settings.tscn" id="2_lglug"]
 [ext_resource type="PackedScene" uid="uid://k6ifqabl5f46" path="res://scenes/notes_panel_settings.tscn" id="4_7ar1m"]
+[ext_resource type="PackedScene" uid="uid://bjat3thnxa3gk" path="res://scenes/general_settings.tscn" id="4_r8oha"]
 
 [node name="SettingsWindow" type="Window" groups=["Persist"]]
 initial_position = 4
@@ -24,18 +25,24 @@ anchor_bottom = 1.0
 offset_bottom = -30.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 1
+current_tab = 0
 
 [node name="Text Editor" parent="TabContainer" instance=ExtResource("2_lglug")]
-visible = false
 custom_minimum_size = Vector2(0, 375)
 layout_mode = 2
 metadata/_tab_index = 0
 
 [node name="Notes" parent="TabContainer" instance=ExtResource("4_7ar1m")]
+visible = false
 custom_minimum_size = Vector2(0, 264)
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="Common" parent="TabContainer" instance=ExtResource("4_r8oha")]
+visible = false
+custom_minimum_size = Vector2(0, 114)
+layout_mode = 2
+metadata/_tab_index = 2
 
 [node name="Exit" type="Button" parent="."]
 anchors_preset = 7

@@ -17,6 +17,9 @@ func set_setting(key: String, val) -> void:
     if node is Button and node.get_child_count() == 1:
         node.text = ""
         node.get_child(0).text = str(val)
+
+    else:
+        super(key, val)
 # }}}
 
 func _on_note_directory_pressed() -> void:
