@@ -10,7 +10,8 @@ config_version=5
 
 [application]
 
-config/name="ntmae"
+config/name="nairu"
+config/version="0.2"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 boot_splash/show_image=false

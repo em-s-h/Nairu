@@ -42,7 +42,7 @@ _data = {
 }
 
 [node name="NotesPanel" type="Panel" groups=["Persist"]]
-custom_minimum_size = Vector2(210, 0)
+custom_minimum_size = Vector2(180, 0)
 anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 210.0

@@ -508,6 +508,7 @@ theme_override_constants/separation = 2
 
 [node name="NotesPanel" parent="HBoxContainer" instance=ExtResource("2_se7sq")]
 visible = false
+custom_minimum_size = Vector2(210, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 

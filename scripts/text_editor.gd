@@ -31,14 +31,12 @@ var font
 
 func _input(event: InputEvent) -> void:
     # {{{
-    var ctrl = InputEventKey.new()
-    ctrl.keycode = KEY_CTRL
-
-    if event.is_match(ctrl, false) and editor_mode != EditorMode.VIM:
-        editable = event.is_released()
+    if event.is_action_pressed("shortcut_save_note", true):
+        editable = false
+        save()
 
     if event.is_action_released("shortcut_save_note", true):
-        save()
+        editable = true
 # }}}
 
 ## Emit `save_note` signal
