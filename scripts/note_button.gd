@@ -55,7 +55,7 @@ func move_settings_popup_y(quant, delta):
     var weight = $AnimationPlayer.current_animation_position / $AnimationPlayer.current_animation_length
     var start = settings_popup_global_pos.y
 
-    if global_position.x - settings_popup.size.x < 0:
+    if global_position.y - settings_popup.size.y < 0:
         positive = !positive
         quant = size.y + 8
         quant *= 1 if positive else -1
