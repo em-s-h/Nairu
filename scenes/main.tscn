@@ -522,6 +522,7 @@ visible = false
 custom_minimum_size = Vector2(0, 55)
 layout_mode = 2
 size_flags_vertical = 8
+focus_mode = 1
 theme_type_variation = &"TopPanel"
 
 [node name="NotesPanelButton" type="Button" parent="HBoxContainer/VBoxContainer/TopPanel"]

@@ -262,6 +262,7 @@ anchor_right = 0.5
 offset_left = -75.0
 offset_right = 75.0
 grow_horizontal = 2
+focus_mode = 1
 
 [connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
@@ -274,5 +275,6 @@ grow_horizontal = 2
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_text_changed"]
 [connection signal="text_submitted" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_text_submitted"]
 [connection signal="delete" from="NoteButtonSettingsPopup" to="." method="_on_note_button_settings_popup_delete"]
+[connection signal="focus_exited" from="NoteButtonSettingsPopup" to="." method="_on_note_button_settings_popup_focus_exited"]
 [connection signal="rename" from="NoteButtonSettingsPopup" to="." method="_on_note_button_settings_popup_rename"]
 [connection signal="save_to" from="NoteButtonSettingsPopup" to="." method="_on_note_button_settings_popup_save_to"]

@@ -135,8 +135,8 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
     match anim_name:
         "open_settings":
             settings_popup_open = true
-            settings_popup.grab_focus()
             _update_settings_popup_global_pos()
+            settings_popup.call_deferred("grab_focus")
 
         "close_settings":
             settings_popup_open = false
@@ -216,3 +216,9 @@ func _on_note_button_settings_popup_save_to() -> void:
     $AnimationPlayer.play("close_settings")
     printerr("To-do: get file dialog and make a custom path")
 # }}}
+
+func _on_note_button_settings_popup_focus_exited() -> void:
+    # {{{
+    _on_note_settings_button_pressed()
+# }}}
+
