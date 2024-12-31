@@ -16,6 +16,9 @@ func set_setting(key: String, val) -> void:
 
     if node is Button and node.get_child_count() == 1:
         node.text = ""
+        if "user://" in val:
+            val = ProjectSettings.globalize_path(val)
+
         node.get_child(0).text = str(val)
 
     else:

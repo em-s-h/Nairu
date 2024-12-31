@@ -17,6 +17,7 @@ enum NoteSort {
 }
 
 signal edit_note(contents: String)
+signal save_note_dates()
 signal note_deleted(is_current: bool)
 
 var NoteButtonScene = preload("res://scenes/note_button.tscn")
@@ -27,6 +28,8 @@ var note_sort := NoteSort.DATE_DESCENDING
 
 var previous_note: String = ""
 var current_note: String = ""
+
+var open_previous_note := false
 var keep_open := false
 
 @onready var notes_container = $VBoxContainer/Notes/ScrollContainer/VBoxContainer
@@ -123,6 +126,7 @@ func get_settings():
     # {{{
     return {
         "note_directory" : note_directory,
+        "open_previous_note": open_previous_note,
         "previous_note" : current_note,
         "date_format" : date_format,
         "note_sort" : note_sort,
@@ -169,6 +173,7 @@ func _on_create_pressed() -> void:
     note_button.delete_note.connect(_on_note_button_delete_note)
     note_button.open_note.connect(_on_note_button_open_note)
     sort_notes()
+    save_note_dates.emit()
 # }}}
 
 func _on_sort_item_selected(index: int) -> void:

@@ -1,19 +1,20 @@
 class_name NoteButton
 extends Button
 
+
 const TITLE_MAX_CHARACTERS := 15
 
 signal open_note(file_name)
 signal rename_note(old_name, new_name)
 signal delete_note(file_name)
 
-var note_name := ""
-var creation_date := ""
-var current_date_format := NotesPanel.DateFormat.DAY_MONTH_YEAR
-
 @onready var settings_popup = $NoteButtonSettingsPopup
 @onready var title = $HBoxContainer/VBoxContainer/Title
 @onready var date = $HBoxContainer/VBoxContainer/CreationDate
+
+var note_name := ""
+var creation_date := ""
+var current_date_format := NotesPanel.DateFormat.DAY_MONTH_YEAR
 
 var settings_popup_global_pos: Vector2
 var settings_popup_open := false
@@ -134,6 +135,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
     match anim_name:
         "open_settings":
             settings_popup_open = true
+            settings_popup.grab_focus()
             _update_settings_popup_global_pos()
 
         "close_settings":

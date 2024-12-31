@@ -23,11 +23,11 @@ var open_top_panel := false
 func _ready() -> void:
     # {{{
     top_panel_size = $HBoxContainer/VBoxContainer/TopPanel.custom_minimum_size
-    # settings_window_size = settings_window.custom_minimum_size
     notes_panel_size = notes_panel.custom_minimum_size
 
     notes_panel.edit_note.connect(text_editor._on_notes_panel_edit_note)
     notes_panel.note_deleted.connect(text_editor._on_notes_panel_note_deleted)
+    notes_panel.save_note_dates.connect(settings_window._on_notes_panel_save_note_dates)
     text_editor.save_note.connect(notes_panel._on_text_editor_save_note)
 
     settings_window.load_settings()

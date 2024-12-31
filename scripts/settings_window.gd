@@ -37,6 +37,20 @@ func save_settings():
     config.save(CONFIG_FILE)
 # }}}
 
+func _on_notes_panel_save_note_dates():
+    # {{{
+    var save_nodes = get_tree().get_nodes_in_group("Persist")
+    for node in save_nodes:
+        if not node is NoteButton:
+            continue
+
+        var settings = node.call("get_settings")
+        for key in settings.keys():
+            config.set_value(node.get_path(), key, settings[key])
+
+    config.save(CONFIG_FILE)
+# }}}
+
 func load_settings():
     # {{{
     var err = config.load(CONFIG_FILE)
