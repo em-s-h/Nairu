@@ -4,11 +4,11 @@
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_hmnwy"]
 [ext_resource type="Script" path="res://scripts/text_editor.gd" id="2_5mcdh"]
 [ext_resource type="PackedScene" uid="uid://jg1bxsdjljwm" path="res://scenes/notes_panel.tscn" id="2_se7sq"]
-[ext_resource type="PackedScene" uid="uid://edhbtx5sla6w" path="res://scenes/settings_window.tscn" id="3_j4jlk"]
 [ext_resource type="Texture2D" uid="uid://te1pu6mvhqif" path="res://icons/down.svg" id="4_5iuao"]
 [ext_resource type="Texture2D" uid="uid://cfm4r6sv8dsxg" path="res://icons/up.svg" id="5_wnhal"]
 [ext_resource type="Texture2D" uid="uid://ycxni3wty7ph" path="res://icons/note.svg" id="7_1rffi"]
 [ext_resource type="Texture2D" uid="uid://ltkl7fjmmxn7" path="res://icons/cog.svg" id="8_px3ne"]
+[ext_resource type="Script" path="res://scripts/settings.gd" id="9_67lvv"]
 
 [sub_resource type="Animation" id="Animation_pnfqd"]
 length = 0.001
@@ -606,8 +606,8 @@ script = ExtResource("2_5mcdh")
 [node name="Delay" type="Timer" parent="HBoxContainer/VBoxContainer/TextEditor"]
 one_shot = true
 
-[node name="SettingsWindow" parent="HBoxContainer" instance=ExtResource("3_j4jlk")]
-visible = false
+[node name="Settings" type="Node" parent="." groups=["Persist"]]
+script = ExtResource("9_67lvv")
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/TopPanel/NotesPanelButton" to="." method="_on_notes_panel_button_pressed"]
@@ -615,4 +615,3 @@ visible = false
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/TopPanelButton" to="." method="_on_top_panel_button_pressed"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/TextEditor" to="HBoxContainer/VBoxContainer/TextEditor" method="_on_text_changed"]
 [connection signal="timeout" from="HBoxContainer/VBoxContainer/TextEditor/Delay" to="HBoxContainer/VBoxContainer/TextEditor" method="_on_delay_timeout"]
-[connection signal="close_requested" from="HBoxContainer/SettingsWindow" to="." method="_on_settings_window_close_requested"]

@@ -2,7 +2,7 @@ class_name Main
 extends Control
 
 
-@onready var settings_window: SettingsWindow = $HBoxContainer/SettingsWindow
+@onready var settings: Settings = $Settings
 @onready var text_editor: TextEditor = $HBoxContainer/VBoxContainer/TextEditor
 @onready var notes_panel: NotesPanel = $HBoxContainer/NotesPanel
 
@@ -11,7 +11,7 @@ extends Control
 var top_panel_size
 var notes_panel_size
 
-var settings_window_open := false
+var settings_open := false
 
 var notes_panel_open := false
 var open_notes_panel := false
@@ -27,22 +27,27 @@ func _ready() -> void:
 
     notes_panel.edit_note.connect(text_editor._on_notes_panel_edit_note)
     notes_panel.note_deleted.connect(text_editor._on_notes_panel_note_deleted)
-    notes_panel.save_note_dates.connect(settings_window._on_notes_panel_save_note_dates)
+    notes_panel.save_note_dates.connect(settings._on_notes_panel_save_note_dates)
     text_editor.save_note.connect(notes_panel._on_text_editor_save_note)
 
-    settings_window.load_settings()
+    settings.load_settings()
     notes_panel.open_last_edited_note()
 
     if notes_panel.keep_open:
         _on_notes_panel_button_pressed()
+
+    if notes_panel.backup_option == notes_panel.BackupOptions.ON_APP_OPEN:
+        notes_panel.create_notes_backup()
 # }}}
 
 func _notification(what: int) -> void:
     # {{{
     if what == NOTIFICATION_WM_CLOSE_REQUEST:
-        # Put warning dialogue
         text_editor.save()
-        settings_window.save_settings()
+        settings.save_settings()
+
+        if notes_panel.backup_option == notes_panel.BackupOptions.ON_APP_CLOSE:
+            notes_panel.create_notes_backup()
 # }}}
 
 func _process(delta: float) -> void:
@@ -95,12 +100,6 @@ func resize_window(direction, quant, delta):
         DisplayServer.window_set_size(new_win_size)
 # }}}
 
-func _on_settings_window_close_requested() -> void:
-    # {{{
-    settings_window.gui_release_focus()
-    settings_window.hide()
-# }}}
-
 
 func _on_top_panel_button_pressed() -> void:
     # {{{
@@ -116,9 +115,8 @@ func _on_notes_panel_button_pressed() -> void:
 
 func _on_settings_window_button_pressed() -> void:
     # {{{
-    settings_window.show()
-    settings_window.grab_focus()
     $HBoxContainer/VBoxContainer/TopPanel/SettingsWindowButton.release_focus()
+    settings.open_settings()
 # }}}
 
 
@@ -144,4 +142,3 @@ func _update_current_window_size():
     # {{{
     current_window_size = DisplayServer.window_get_size()
 # }}}
-

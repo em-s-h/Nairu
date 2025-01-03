@@ -2,6 +2,7 @@ class_name NotesPanel
 extends Node
 
 
+const DEFAULT_NOTE_BACKUP_DIRECTORY = "user://backups"
 const DEFAULT_NOTE_DIRECTORY = "user://notes"
 
 enum DateFormat {
@@ -16,13 +17,22 @@ enum NoteSort {
     NAME_ASCENDING,
 }
 
+enum BackupOptions {
+    OFF,
+    ON_APP_OPEN,
+    ON_APP_CLOSE,
+}
+
 signal edit_note(contents: String)
 signal save_note_dates()
 signal note_deleted(is_current: bool)
 
 var NoteButtonScene = preload("res://scenes/note_button.tscn")
 
+var backup_directory = DEFAULT_NOTE_BACKUP_DIRECTORY
 var note_directory = DEFAULT_NOTE_DIRECTORY
+
+var backup_option := BackupOptions.ON_APP_OPEN
 var date_format := DateFormat.DAY_MONTH_YEAR
 var note_sort := NoteSort.DATE_DESCENDING
 
@@ -33,16 +43,16 @@ var open_previous_note := false
 var keep_open := false
 
 @onready var notes_container = $VBoxContainer/Notes/ScrollContainer/VBoxContainer
-# var notes = []
 
 
 func _ready() -> void:
     # {{{
+    create_note_dirs()
     var dir = DirAccess.open(note_directory)
     if dir != null:
         for f in dir.get_files():
             var note_button = NoteButtonScene.instantiate()
-            var n_name = f.get_file().get_basename()
+            var n_name = f.get_basename()
 
             note_button.initialize(n_name, "", date_format)
             notes_container.add_child(note_button)
@@ -56,10 +66,6 @@ func _ready() -> void:
     printerr("Err: '%s'" % DirAccess.get_open_error())
 
     note_directory = DEFAULT_NOTE_DIRECTORY
-    dir = DirAccess.open("user://")
-    if !dir.dir_exists("./notes"):
-        dir.make_dir("./notes")
-        return
 # }}}
 
 ## Open the last edited note.
@@ -86,7 +92,10 @@ func open_last_edited_note() -> bool:
 
 func format_date(date, from, to) -> String:
     # {{{
-    date = date.split("-")
+    if "-" in date:
+        date = date.split("-")
+    else:
+        date = date.split("/")
 
     if from == to:
         return "/".join(date)
@@ -121,13 +130,71 @@ func sort_notes():
         notes_container.add_child(n)
 # }}}
 
+func create_notes_backup() -> void:
+    # {{{
+    create_note_dirs()
+     
+    var dir = DirAccess.open(backup_directory)
+    if dir == null:
+        printerr("Unable to open note backup directory '%s', returning." % backup_directory)
+        printerr("Err: '%s'" % DirAccess.get_open_error())
+        return
+
+    var date = Time.get_date_string_from_system()
+    var zip_file = "%s/backup_%s.zip" % [backup_directory, date]
+
+    var tmp = FileAccess.open(zip_file, FileAccess.ModeFlags.WRITE)
+    if tmp == null:
+        printerr("Unable to create zip file '%s', returning." % zip_file)
+        printerr("Err: '%s'" % FileAccess.get_open_error())
+        return
+    tmp.close()
+
+    var ziper = ZIPPacker.new()
+    var err = ziper.open(zip_file)
+
+    if err != OK:
+        printerr("Unable to open zip file '%s', returning." % zip_file)
+        printerr("Err: '%s'" % err)
+        return
+
+    dir = DirAccess.open(note_directory)
+    if dir == null:
+        printerr("Unable to open notes directory '%s', returning." % note_directory)
+        printerr("Err: '%s'" % DirAccess.get_open_error())
+        return
+
+    for f in dir.get_files():
+        f = "%s/%s" % [note_directory, f]
+        var contents = FileAccess.get_file_as_string(f)
+
+        ziper.start_file(f)
+        ziper.write_file(contents.to_utf8_buffer())
+        ziper.close_file()
+
+    ziper.close()
+# }}}
+
+func create_note_dirs() -> void:
+    # {{{
+    var dir = DirAccess.open("user://")
+
+    if !dir.dir_exists("./backups"):
+        dir.make_dir("./backups")
+
+    if !dir.dir_exists("./notes"):
+        dir.make_dir("./notes")
+# }}}
+
 
 func get_settings():
     # {{{
     return {
+        "backup_directory" : backup_directory,
         "note_directory" : note_directory,
         "open_previous_note": open_previous_note,
         "previous_note" : current_note,
+        "backup_option" : backup_option,
         "date_format" : date_format,
         "note_sort" : note_sort,
         "keep_open" : keep_open,
