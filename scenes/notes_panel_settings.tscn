@@ -55,13 +55,59 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = -145.0
+offset_left = -186.0
 offset_top = -15.5
 offset_right = -2.0
 offset_bottom = 15.5
 grow_vertical = 2
 theme_type_variation = &"LineEditField"
-text = "aaaaaaaaaaaaaaa"
+text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+[node name="Label4" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+text = "Backups directory"
+
+[node name="BackupDirectory" type="Button" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(31, 31)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+theme_type_variation = &"IconButton"
+icon = ExtResource("3_1u8xf")
+icon_alignment = 1
+expand_icon = true
+
+[node name="LineEdit" type="LineEdit" parent="ScrollContainer/GridContainer/BackupDirectory"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -186.0
+offset_top = -15.5
+offset_right = -2.0
+offset_bottom = 15.5
+grow_vertical = 2
+theme_type_variation = &"LineEditField"
+text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+[node name="Label5" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+text = "Note backups"
+
+[node name="BackupOption" type="OptionButton" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+theme_type_variation = &"SettingLineEdit"
+flat = true
+alignment = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Off"
+popup/item_1/text = "On app open"
+popup/item_1/id = 1
+popup/item_2/text = "On app close"
+popup/item_2/id = 2
 
 [node name="Label2" type="Label" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
@@ -95,5 +141,7 @@ size_flags_horizontal = 10
 size_flags_vertical = 6
 
 [connection signal="pressed" from="ScrollContainer/GridContainer/NoteDirectory" to="." method="_on_note_directory_pressed"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/BackupDirectory" to="." method="_on_backup_directory_pressed"]
+[connection signal="item_selected" from="ScrollContainer/GridContainer/BackupOption" to="." method="_on_backup_option_item_selected"]
 [connection signal="item_selected" from="ScrollContainer/GridContainer/DateFormat" to="." method="_on_date_format_item_selected"]
 [connection signal="toggled" from="ScrollContainer/GridContainer/KeepOpen" to="." method="_on_keep_open_toggled"]

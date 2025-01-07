@@ -22,8 +22,14 @@ func _ready() -> void:
 
 func open_settings():
     # {{{
-    settings_window = _create_settings_scene()
+    settings_window = SettingsWindowScene.instantiate()
     add_child(settings_window)
+
+    settings_window.close_requested.connect(_on_settings_window_close_requested)
+
+    var tab_cont = settings_window.get_node("TabContainer")
+    for c in tab_cont.get_children():
+        c.setting_changed.connect(_on_settings_panel_setting_changed)
 
     var err = config.load(CONFIG_PATH)
     if err != OK:
@@ -120,6 +126,7 @@ func _on_settings_panel_setting_changed(key: String, val):
         printerr("Invalid node path: '%s', returning." % sect)
         return
 
+    prints("%s changed" % key)
     config.set_value(sect, key, val)
     node.set(key, val)
 
@@ -131,15 +138,3 @@ func _on_settings_panel_setting_changed(key: String, val):
 
 func _on_settings_window_close_requested() -> void:
     settings_window.queue_free()
-
-func _create_settings_scene():
-    # {{{
-    var i: SettingsWindow = SettingsWindowScene.instantiate()
-
-    i.close_requested.connect(_on_settings_window_close_requested)
-    for c in i.get_children():
-        if c is SettingsPanel:
-            c.setting_changed.connect(_on_settings_panel_setting_changed)
-
-    return i
-# }}}
