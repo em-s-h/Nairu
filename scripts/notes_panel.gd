@@ -5,27 +5,30 @@ extends Node
 const DEFAULT_NOTE_BACKUP_DIRECTORY = "user://backups"
 const DEFAULT_NOTE_DIRECTORY = "user://notes"
 
+# Enums {{{
 enum DateFormat {
-    YEAR_MONTH_DAY,
-    DAY_MONTH_YEAR,
+YEAR_MONTH_DAY,
+DAY_MONTH_YEAR,
 }
 
 enum NoteSort {
-    DATE_DESCENDING,
-    DATE_ASCENDING,
-    NAME_DESCENDING,
-    NAME_ASCENDING,
+DATE_DESCENDING,
+DATE_ASCENDING,
+NAME_DESCENDING,
+NAME_ASCENDING,
 }
 
 enum BackupOptions {
-    OFF,
-    ON_APP_OPEN,
-    ON_APP_CLOSE,
+OFF,
+ON_APP_OPEN,
+ON_APP_CLOSE,
 }
+# }}}
 
 signal edit_note(contents: String)
 signal save_note_dates()
 signal note_deleted(is_current: bool)
+signal note_changed(new_note: String)
 
 var NoteButtonScene = preload("res://scenes/note_button.tscn")
 
@@ -83,7 +86,7 @@ func open_last_edited_note() -> bool:
         printerr("Err: '%s'" % FileAccess.get_open_error())
         return false
 
-    DisplayServer.window_set_title(previous_note.get_file().get_basename())
+    note_changed.emit(previous_note.get_file().get_basename())
     edit_note.emit(file.get_as_text())
     current_note = previous_note
 
@@ -282,8 +285,8 @@ func _on_note_button_rename_note(old_name, new_name: String):
             n.set_note_name(new_name)
 
     if old_name == current_note.get_file().get_basename():
-        DisplayServer.window_set_title(new_name)
         current_note = make_note_path(new_name)
+        note_changed.emit(new_name)
     sort_notes()
 # }}}
 
@@ -303,8 +306,8 @@ func _on_note_button_open_note(note_name):
         printerr("Err: '%s'" % FileAccess.get_open_error())
         return
 
-    DisplayServer.window_set_title(title)
     edit_note.emit(file.get_as_text())
+    note_changed.emit(title)
     current_note = path
 # }}}
 
@@ -322,6 +325,7 @@ func _on_note_button_delete_note(note_name):
         if n.note_name == note_name:
             n.queue_free()
             note_deleted.emit(path == current_note)
+            note_changed.emit("")
             return
 # }}}
 

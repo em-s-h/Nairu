@@ -29,6 +29,7 @@ func _ready() -> void:
     notes_panel.note_deleted.connect(text_editor._on_notes_panel_note_deleted)
     notes_panel.save_note_dates.connect(settings._on_notes_panel_save_note_dates)
     text_editor.save_note.connect(notes_panel._on_text_editor_save_note)
+    notes_panel.note_changed.connect(change_title)
 
     settings.load_settings()
     notes_panel.open_last_edited_note()
@@ -69,6 +70,14 @@ func _process(delta: float) -> void:
         $AnimationPlayer.play("close_notes_panel")
         resize_window(Vector2.RIGHT, -notes_panel_size.x, delta)
         notes_panel.close_panel()
+# }}}
+
+func change_title(new_title: String) -> void:
+    # {{{
+    if new_title.is_empty():
+        new_title = "Nairu"
+
+    DisplayServer.window_set_title(new_title)
 # }}}
 
 func resize_window(direction, quant, delta):
