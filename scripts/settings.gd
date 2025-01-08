@@ -29,7 +29,8 @@ func open_settings():
 
     var tab_cont = settings_window.get_node("TabContainer")
     for c in tab_cont.get_children():
-        c.setting_changed.connect(_on_settings_panel_setting_changed)
+        if c is SettingsPanel:
+            c.setting_changed.connect(_on_settings_panel_setting_changed)
 
     var err = config.load(CONFIG_PATH)
     if err != OK:
