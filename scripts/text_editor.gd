@@ -21,6 +21,7 @@ var vim_mode = VimMode.NORMAL
 var line_numbers := true
 var line_spacing := 2
 
+var contents_changed := false
 var note_open := false
 var auto_save := true
 var delay_time := 0.5
@@ -44,6 +45,7 @@ func _input(event: InputEvent) -> void:
 ## Shorter way of doing `save_note.emit(text)`
 func save() -> void:
     # {{{
+    contents_changed = false
     save_note.emit(text)
 # }}}
 
@@ -72,6 +74,7 @@ func _on_notes_panel_edit_note(contents):
     text = contents
     note_open = true
     gutters_draw_line_numbers = line_numbers
+    contents_changed = false
 # }}}
 
 func _on_notes_panel_note_deleted(is_current: bool) -> void:
@@ -80,11 +83,13 @@ func _on_notes_panel_note_deleted(is_current: bool) -> void:
         text = ""
         note_open = false
         gutters_draw_line_numbers = false
+        contents_changed = false
 # }}}
 
 
 func _on_text_changed() -> void:
     # {{{
+    contents_changed = true
     $Delay.start(delay_time)
 # }}}
 

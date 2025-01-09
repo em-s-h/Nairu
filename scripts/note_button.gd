@@ -185,7 +185,6 @@ func _on_note_button_settings_popup_delete() -> void:
     var confirm_dialog = ConfirmationDialog.new()
 
     confirm_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-    confirm_dialog.visible = true
     confirm_dialog.theme = load("res://themes/default.tres")
 
     confirm_dialog.title = "Confirm"
@@ -195,8 +194,10 @@ func _on_note_button_settings_popup_delete() -> void:
     confirm_dialog.get_ok_button().pressed.connect(_on_confirm_dialog_confirm)
 
     add_child(confirm_dialog)
+    confirm_dialog.show()
     for c in confirm_dialog.get_children(true):
         if c is Panel: c.remove_theme_stylebox_override("panel")
+        if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 # }}}
 
 func _on_confirm_dialog_confirm():

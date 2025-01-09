@@ -12,6 +12,7 @@ var top_panel_size
 var notes_panel_size
 
 var settings_open := false
+var title := "Nairu"
 
 var notes_panel_open := false
 var open_notes_panel := false
@@ -22,6 +23,7 @@ var open_top_panel := false
 
 func _ready() -> void:
     # {{{
+    get_tree().set_auto_accept_quit(false)
     top_panel_size = $HBoxContainer/VBoxContainer/TopPanel.custom_minimum_size
     notes_panel_size = notes_panel.custom_minimum_size
 
@@ -29,6 +31,11 @@ func _ready() -> void:
     notes_panel.note_deleted.connect(text_editor._on_notes_panel_note_deleted)
     notes_panel.save_note_dates.connect(settings._on_notes_panel_save_note_dates)
     text_editor.save_note.connect(notes_panel._on_text_editor_save_note)
+
+    var sav = func(_a): if "*" in title: change_title(title.erase(len(title)-1, 1))
+    var txt = func(): if not "*" in title: change_title("%s*" % title)
+    text_editor.text_changed.connect(txt)
+    text_editor.save_note.connect(sav)
     notes_panel.note_changed.connect(change_title)
 
     settings.load_settings()
@@ -44,11 +51,41 @@ func _ready() -> void:
 func _notification(what: int) -> void:
     # {{{
     if what == NOTIFICATION_WM_CLOSE_REQUEST:
-        text_editor.save()
         settings.save_settings()
+
+        if text_editor.contents_changed:
+            var d = ConfirmationDialog.new()
+            add_child(d)
+
+            var conf = func():
+                text_editor.save()
+                get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+
+            var exit = func(a):
+                if a == "exit":
+                    get_tree().quit()
+
+            d.custom_action.connect(exit)
+            d.confirmed.connect(conf)
+
+            d.title = "Changes not saved!"
+            d.theme = load("res://themes/default.tres")
+            for c in d.get_children(true):
+                if c is Panel: c.remove_theme_stylebox_override("panel")
+                if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+            d.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
+            d.dialog_text = "Are you sure you want to exit?\nYou have unsaved changes."
+            d.ok_button_text = "Save & exit"
+
+            d.add_button("Exit w/o saving", false, "exit")
+            d.show()
+            return
 
         if notes_panel.backup_option == notes_panel.BackupOptions.ON_APP_CLOSE:
             notes_panel.create_notes_backup()
+
+        get_tree().quit()
 # }}}
 
 func _process(delta: float) -> void:
@@ -78,6 +115,7 @@ func change_title(new_title: String) -> void:
         new_title = "Nairu"
 
     DisplayServer.window_set_title(new_title)
+    title = new_title
 # }}}
 
 func resize_window(direction, quant, delta):
