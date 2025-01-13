@@ -1,7 +1,6 @@
-[gd_scene load_steps=12 format=3 uid="uid://cpg2cvm3041aq"]
+[gd_scene load_steps=11 format=3 uid="uid://cpg2cvm3041aq"]
 
 [ext_resource type="Script" path="res://scripts/note_button.gd" id="1_4xlr2"]
-[ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/default.tres" id="1_rk1oo"]
 [ext_resource type="Texture2D" uid="uid://d2wndtya3tdyx" path="res://icons/dots.svg" id="2_qdfx8"]
 [ext_resource type="PackedScene" uid="uid://cw5hepbv7468v" path="res://scenes/note_button_settings_popup.tscn" id="3_0nidw"]
 
@@ -197,7 +196,6 @@ offset_right = 200.0
 offset_bottom = 65.0
 size_flags_horizontal = 6
 size_flags_vertical = 0
-theme = ExtResource("1_rk1oo")
 script = ExtResource("1_4xlr2")
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -269,7 +267,6 @@ focus_mode = 1
 [connection signal="pressed" from="." to="." method="_on_pressed"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="pressed" from="HBoxContainer/NoteSettingsButton" to="." method="_on_note_settings_button_pressed"]
-[connection signal="focus_entered" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_focus_entered"]
 [connection signal="focus_exited" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_focus_exited"]
 [connection signal="gui_input" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_gui_input"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/Title" to="." method="_on_title_text_changed"]

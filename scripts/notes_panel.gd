@@ -65,8 +65,13 @@ func _ready() -> void:
             note_button.open_note.connect(_on_note_button_open_note)
         return
 
-    printerr("Unable to access directory '%s', using default directory." % note_directory)
-    printerr("Err: '%s'" % DirAccess.get_open_error())
+    var d = ErrorDialog.new()
+    var msg = "Unable to access directory '%s'\n," % note_directory
+    msg += "switching to default note directory.\n"
+    msg += "Error: '%s'" % ErrorDialog.expand_error_code(DirAccess.get_open_error())
+
+    d.dialog_text = msg
+    add_child(d)
 
     note_directory = DEFAULT_NOTE_DIRECTORY
 # }}}
@@ -82,6 +87,7 @@ func open_last_edited_note() -> bool:
 
     var file = FileAccess.open(previous_note, FileAccess.READ)
     if file == null:
+        # Replace with warning
         printerr("Unable to open previous note '%s'." % previous_note)
         printerr("Err: '%s'" % FileAccess.get_open_error())
         return false
@@ -135,6 +141,7 @@ func sort_notes():
 
 func create_notes_backup() -> void:
     # {{{
+    # Replace all printerr with warning
     create_note_dirs()
      
     var dir = DirAccess.open(backup_directory)
@@ -276,8 +283,13 @@ func _on_note_button_rename_note(old_name, new_name: String):
     var res = DirAccess.rename_absolute(from, to)
 
     if res != OK:
-        printerr("Unable to rename file '%s' to '%s'." % [from, to])
-        printerr("Err: '%s'" % res)
+        var d = ErrorDialog.new()
+        var msg = "Unable to rename note '%s' to '%s'.\n" % [old_name, new_name]
+        msg += "Note path: '%s',\n" % from
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(res)
+
+        d.dialog_text = msg
+        add_child(d)
         return
 
     for n in notes_container.get_children():
@@ -302,8 +314,13 @@ func _on_note_button_open_note(note_name):
     var file = FileAccess.open(path, FileAccess.READ)
 
     if file == null:
-        printerr("Unable to open note '%s'." % note_name)
-        printerr("Err: '%s'" % FileAccess.get_open_error())
+        var d = ErrorDialog.new()
+        var msg = "Unable to open note '%s'.\n" % note_name
+        msg += "Note path: '%s',\n" % path
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(FileAccess.get_open_error())
+
+        d.dialog_text = msg
+        add_child(d)
         return
 
     edit_note.emit(file.get_as_text())
@@ -317,8 +334,13 @@ func _on_note_button_delete_note(note_name):
     var res = DirAccess.remove_absolute(path)
 
     if res != OK:
-        printerr("Unable to delete note '%s'" % note_name)
-        printerr("Err: '%s'" % res)
+        var d = ErrorDialog.new()
+        var msg = "Unable to delete note '%s'.\n" % note_name
+        msg += "Note path: '%s',\n" % path
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(res)
+
+        d.dialog_text = msg
+        add_child(d)
         return
 
     for n in notes_container.get_children():
@@ -336,8 +358,13 @@ func _on_text_editor_save_note(note_contents):
 
     var file = FileAccess.open(current_note, FileAccess.WRITE)
     if file == null:
-        prints("Unable to open file '%s' for saving." % current_note)
-        prints("Err: '%s'" % FileAccess.get_open_error())
+        var d = ErrorDialog.new()
+        var msg = "Unable to write note contents to file.\n"
+        msg += "Note path: '%s'\n" % current_note
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(FileAccess.get_open_error())
+
+        d.dialog_text = msg
+        add_child(d)
         return
 
     file.store_string(note_contents)

@@ -34,7 +34,15 @@ func open_settings():
 
     var err = config.load(CONFIG_PATH)
     if err != OK:
-        printerr("Err: '%s', on config file load." % err)
+        var d = ErrorDialog.new()
+        var msg = "Unable to open settings window:\n"
+        msg += "configuration file could not be loaded.\n"
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(err)
+
+        d.dialog_text = msg
+        add_child(d)
+
+        settings_window.queue_free()
         return
 
     settings_window.reload_settings(config)
@@ -61,14 +69,24 @@ func load_settings():
     # {{{
     var err = config.load(CONFIG_PATH)
     if err != OK:
-        printerr("Err: '%s', on config file load." % err)
+        var d = ErrorDialog.new()
+        var msg = "Unable to load configuration file.\n"
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(err)
+
+        d.dialog_text = msg
+        d.ok_button_text = "Continue with default settings"
+
+        d.add_cancel_button("Close application")
+        d.canceled.connect(func(): get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST))
+
+        add_child(d)
         return
 
     for scene_path in config.get_sections():
         var node = get_node_or_null(scene_path)
         if node == null:
-            printerr("Invalid node path: '%s', returning." % scene_path)
-            return
+            printerr("Invalid node path: '%s', skipping." % scene_path)
+            continue
 
         for key in config.get_section_keys(scene_path):
             node.set(key, config.get_value(scene_path, key))
@@ -114,7 +132,12 @@ func _on_settings_panel_setting_changed(key: String, val):
     # {{{
     var err = config.load(CONFIG_PATH)
     if err != OK:
-        printerr("Err: '%s', on config file load." % err)
+        var d = ErrorDialog.new()
+        var msg = "Unable to load configuration file, settings not saved.\n"
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(err)
+
+        d.dialog_text = msg
+        add_child(d)
         return
 
     var sect

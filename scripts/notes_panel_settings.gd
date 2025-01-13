@@ -11,7 +11,7 @@ func set_setting(key: String, val) -> void:
     var node = get_node_or_null("ScrollContainer/GridContainer/%s" % node_name)
 
     if node == null:
-        printerr("Invalid node: '%s', returning." % node_name)
+        printerr("Setting '%s' not found, returning." % node_name)
         return
 
     if node is Button and node.get_child_count() == 1:
@@ -35,11 +35,17 @@ func create_file_picker(callback_func: Callable, override := false) -> FileDialo
     else:
         on_dir_selected = func(dir: String):
             var res = DirAccess.open(dir)
-            if res == null:
-                printerr("Invalid directory path: '%s', returning.", % dir)
-                printerr("Err: '%s'" % DirAccess.get_open_error())
+            if res != null:
+                callback_func.call(dir)
                 return
-            callback_func.call(dir)
+
+            var d = ErrorDialog.new()
+            var msg = "Invalid directory path: '%s',\n" % dir
+            msg += "Error: '%s'\n" % ErrorDialog.expand_error_code(DirAccess.get_open_error())
+            msg += "Please choose a proper directory."
+
+            d.dialog_text = msg
+            add_child(d)
 
     f.file_mode = FileDialog.FILE_MODE_OPEN_DIR
     f.dir_selected.connect(on_dir_selected)

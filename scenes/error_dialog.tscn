@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://dgtd6fdjpnluq"]
-
-[node name="ErrorDialog" type="AcceptDialog"]
-initial_position = 4
-ok_button_text = "Ok"
-dialog_close_on_escape = false

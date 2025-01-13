@@ -50,42 +50,44 @@ func _ready() -> void:
 
 func _notification(what: int) -> void:
     # {{{
-    if what == NOTIFICATION_WM_CLOSE_REQUEST:
-        settings.save_settings()
+    if what != NOTIFICATION_WM_CLOSE_REQUEST:
+        return
 
-        if text_editor.contents_changed:
-            var d = ConfirmationDialog.new()
-            add_child(d)
+    settings.save_settings()
 
-            var conf = func():
-                text_editor.save()
-                get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+    if text_editor.contents_changed:
+        var d = ConfirmationDialog.new()
+        add_child(d)
 
-            var exit = func(a):
-                if a == "exit":
-                    get_tree().quit()
+        var conf = func():
+            text_editor.save()
+            get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 
-            d.custom_action.connect(exit)
-            d.confirmed.connect(conf)
+        var exit = func(a):
+            if a == "exit":
+                get_tree().quit()
 
-            d.title = "Changes not saved!"
-            d.theme = load("res://themes/default.tres")
-            for c in d.get_children(true):
-                if c is Panel: c.remove_theme_stylebox_override("panel")
-                if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        d.custom_action.connect(exit)
+        d.confirmed.connect(conf)
 
-            d.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-            d.dialog_text = "Are you sure you want to exit?\nYou have unsaved changes."
-            d.ok_button_text = "Save & exit"
+        d.title = "Changes not saved!"
+        d.theme = load("res://themes/default.tres")
+        for c in d.get_children(true):
+            if c is Panel: c.remove_theme_stylebox_override("panel")
+            if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
-            d.add_button("Exit w/o saving", false, "exit")
-            d.show()
-            return
+        d.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
+        d.dialog_text = "Are you sure you want to exit?\nYou have unsaved changes."
+        d.ok_button_text = "Save & exit"
 
-        if notes_panel.backup_option == notes_panel.BackupOptions.ON_APP_CLOSE:
-            notes_panel.create_notes_backup()
+        d.add_button("Exit w/o saving", false, "exit")
+        d.show()
+        return
 
-        get_tree().quit()
+    if notes_panel.backup_option == notes_panel.BackupOptions.ON_APP_CLOSE:
+        notes_panel.create_notes_backup()
+
+    get_tree().quit()
 # }}}
 
 func _process(delta: float) -> void:

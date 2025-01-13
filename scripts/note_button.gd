@@ -109,7 +109,7 @@ func _on_pressed() -> void:
 func _on_focus_exited() -> void:
     # {{{
     if settings_popup_open:
-        $AnimationPlayer.play("close_settings")
+        _on_note_settings_button_pressed()
 # }}}
 
 func _on_gui_input(event: InputEvent) -> void:
@@ -118,7 +118,7 @@ func _on_gui_input(event: InputEvent) -> void:
     r_click.button_index = MOUSE_BUTTON_RIGHT
 
     if event.is_match(r_click) and event.is_released():
-        $AnimationPlayer.play("open_settings")
+        _on_note_settings_button_pressed()
 # }}}
 
 func _on_note_settings_button_pressed() -> void:
@@ -135,17 +135,12 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
     match anim_name:
         "open_settings":
             settings_popup_open = true
-            _update_settings_popup_global_pos()
+            settings_popup_global_pos = settings_popup.global_position
             settings_popup.call_deferred("grab_focus")
 
         "close_settings":
             settings_popup_open = false
-            _update_settings_popup_global_pos()
-# }}}
-
-func _update_settings_popup_global_pos():
-    # {{{
-    settings_popup_global_pos = settings_popup.global_position
+            settings_popup_global_pos = settings_popup.global_position
 # }}}
 
 
@@ -163,11 +158,6 @@ func _on_title_text_changed(new_text: String) -> void:
     # {{{
     title.expand_to_text_length = len(new_text) <= TITLE_MAX_CHARACTERS
     title.custom_minimum_size = Vector2(138, 0)
-# }}}
-
-func _on_title_focus_exited() -> void:
-    # {{{
-    title.editable = false
 # }}}
 
 func _on_title_text_submitted(new_text: String) -> void:
@@ -210,12 +200,6 @@ func _on_note_button_settings_popup_rename() -> void:
     $AnimationPlayer.play("close_settings")
     title.editable = true
     title.grab_focus()
-# }}}
-
-func _on_note_button_settings_popup_save_to() -> void:
-    # {{{
-    $AnimationPlayer.play("close_settings")
-    printerr("To-do: get file dialog and make a custom path")
 # }}}
 
 func _on_note_button_settings_popup_focus_exited() -> void:
