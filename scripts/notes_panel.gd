@@ -141,22 +141,34 @@ func sort_notes():
 
 func create_notes_backup() -> void:
     # {{{
-    # Replace all printerr with warning
     create_note_dirs()
+    var warn = func(mesg: String):
+        var d = ErrorDialog.new()
+        d.report_bug = false
+        d.dialog_text = mesg
+        d.ok_button_text = "Cancel backup"
+        d.add_cancel_button("Restart backup")
+        d.canceled.connect(create_notes_backup)
+        add_child(d)
      
     var dir = DirAccess.open(backup_directory)
     if dir == null:
-        printerr("Unable to open note backup directory '%s', returning." % backup_directory)
-        printerr("Err: '%s'" % DirAccess.get_open_error())
+        var msg = "Unable to open note backup directory,\n"
+        msg += "directory path: '%s'\n" % backup_directory
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(DirAccess.get_open_error())
+        warn.call(msg)
         return
 
     var date = Time.get_date_string_from_system()
     var zip_file = "%s/backup_%s.zip" % [backup_directory, date]
 
+    # Creating zip here because unsure if ZIPPacker.open() creates it.
     var tmp = FileAccess.open(zip_file, FileAccess.ModeFlags.WRITE)
     if tmp == null:
-        printerr("Unable to create zip file '%s', returning." % zip_file)
-        printerr("Err: '%s'" % FileAccess.get_open_error())
+        var msg = "Unable to create zip file for backup,\n"
+        msg += "zip file path: '%s'\n" % zip_file
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(FileAccess.get_open_error())
+        warn.call(msg)
         return
     tmp.close()
 
@@ -164,23 +176,40 @@ func create_notes_backup() -> void:
     var err = ziper.open(zip_file)
 
     if err != OK:
-        printerr("Unable to open zip file '%s', returning." % zip_file)
-        printerr("Err: '%s'" % err)
+        var msg = "Unable to open zip file for backup\n"
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(err)
+        warn.call(msg)
         return
 
     dir = DirAccess.open(note_directory)
     if dir == null:
-        printerr("Unable to open notes directory '%s', returning." % note_directory)
-        printerr("Err: '%s'" % DirAccess.get_open_error())
+        var msg = "Unable to open notes directory for backup,\n"
+        msg += "directory path: '%s'\n" % note_directory
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(DirAccess.get_open_error())
+        warn.call(msg)
+
+        ziper.close()
+        DirAccess.remove_absolute(zip_file)
         return
 
     for f in dir.get_files():
-        f = "%s/%s" % [note_directory, f]
-        var contents = FileAccess.get_file_as_string(f)
+        var f_path = "%s/%s" % [note_directory, f]
+        var contents = FileAccess.get_file_as_string(f_path)
 
-        ziper.start_file(f)
-        ziper.write_file(contents.to_utf8_buffer())
-        ziper.close_file()
+        if !contents.is_empty() || FileAccess.get_open_error() == OK:
+            ziper.start_file(f)
+            ziper.write_file(contents.to_utf8_buffer())
+            ziper.close_file()
+            continue
+
+        var msg = "Unable to read note's contents for backup,\n"
+        msg += "note file path: '%s'\n" % f_path
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(FileAccess.get_open_error())
+        warn.call(msg)
+
+        ziper.close()
+        DirAccess.remove_absolute(zip_file)
+        return
 
     ziper.close()
 # }}}
