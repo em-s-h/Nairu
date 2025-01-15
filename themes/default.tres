@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=58 format=3 uid="uid://c5680xpg6t205"]
+[gd_resource type="Theme" load_steps=63 format=3 uid="uid://c5680xpg6t205"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4vqrm"]
 content_margin_left = 2.0
@@ -381,6 +381,58 @@ border_color = Color(0.190762, 0.190762, 0.190762, 1)
 corner_detail = 5
 expand_margin_right = 2.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_og57f"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.878431, 0.878431, 0.878431, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.497474, 0.497474, 0.497473, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lwtng"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0.960784, 0.960784, 0.960784, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.701961, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ge3ke"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.941176, 0.941176, 0.941176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.666667, 0.666667, 0.666667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0p6jf"]
 content_margin_left = 2.0
 content_margin_top = 2.0
@@ -505,6 +557,33 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0, 0, 0, 1)
 border_blend = true
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5j4d0"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0.960784, 0.960784, 0.960784, 1)
+draw_center = false
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_evhlf"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0.4, 0.701961, 1, 0.176471)
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x51iv"]
@@ -760,6 +839,10 @@ NotesContainerPanel/base_type = &"Panel"
 NotesContainerPanel/styles/panel = SubResource("StyleBoxFlat_hes0b")
 NotesPanel/base_type = &"Panel"
 NotesPanel/styles/panel = SubResource("StyleBoxFlat_wdfqg")
+NotificationDialog/base_type = &"Button"
+NotificationDialog/styles/hover = SubResource("StyleBoxFlat_og57f")
+NotificationDialog/styles/normal = SubResource("StyleBoxFlat_lwtng")
+NotificationDialog/styles/pressed = SubResource("StyleBoxFlat_ge3ke")
 OptionButton/constants/h_separation = 8
 OptionButton/styles/disabled = SubResource("StyleBoxFlat_0p6jf")
 OptionButton/styles/focus = SubResource("StyleBoxFlat_qtxu6")
@@ -775,6 +858,8 @@ PopupMenu/colors/font_hover_color = Color(0.247059, 0.247059, 0.247059, 1)
 PopupMenu/colors/font_separator_color = Color(0, 0, 0, 1)
 PopupMenu/styles/hover = SubResource("StyleBoxFlat_mpxv3")
 PopupMenu/styles/panel = SubResource("StyleBoxFlat_66vcr")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_5j4d0")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_evhlf")
 TabContainer/colors/font_selected_color = Color(0, 0, 0, 1)
 TabContainer/colors/font_unselected_color = Color(0.392157, 0.392157, 0.392157, 1)
 TabContainer/constants/side_margin = 0

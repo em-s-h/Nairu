@@ -30,7 +30,8 @@ signal save_note_dates()
 signal note_deleted(is_current: bool)
 signal note_changed(new_note: String)
 
-var NoteButtonScene = preload("res://scenes/note_button.tscn")
+@export var NotificationDialogScene = preload("res://scenes/notification_dialog.tscn")
+@export var NoteButtonScene = preload("res://scenes/note_button.tscn")
 
 var backup_directory = DEFAULT_NOTE_BACKUP_DIRECTORY
 var note_directory = DEFAULT_NOTE_DIRECTORY
@@ -87,9 +88,15 @@ func open_last_edited_note() -> bool:
 
     var file = FileAccess.open(previous_note, FileAccess.READ)
     if file == null:
-        # Replace with warning
-        printerr("Unable to open previous note '%s'." % previous_note)
-        printerr("Err: '%s'" % FileAccess.get_open_error())
+        var notif = NotificationDialogScene.instantiate()
+        var msg = "Unable to open previous note,\n"
+        msg += "Error: '%s'" % ErrorDialog.expand_error_code(FileAccess.get_open_error())
+
+        notif.color = Color.RED
+        notif.message = msg
+        notif.duration = 6
+
+        get_tree().root.get_node("Main").add_child(notif)
         return false
 
     note_changed.emit(previous_note.get_file().get_basename())
@@ -398,6 +405,12 @@ func _on_text_editor_save_note(note_contents):
 
     file.store_string(note_contents)
     file.close()
+
+    var notif = NotificationDialogScene.instantiate()
+    notif.message = "Note saved!"
+    notif.color = Color.GREEN
+    notif.duration = 1.25
+    get_tree().root.get_node("Main").add_child(notif)
 # }}}
 
 
