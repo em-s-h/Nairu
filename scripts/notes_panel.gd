@@ -371,8 +371,8 @@ func _on_note_button_delete_note(note_name):
 
     if res != OK:
         var d = ErrorDialog.new()
-        var msg = "Unable to delete note '%s'.\n" % note_name
-        msg += "Note path: '%s',\n" % path
+        var msg = "Unable to delete note: '%s'\n" % note_name
+        msg += "Note path: '%s'\n" % path
         msg += "Error: '%s'" % ErrorDialog.expand_error_code(res)
 
         d.dialog_text = msg

@@ -8,7 +8,9 @@ signal open_note(file_name)
 signal rename_note(old_name, new_name)
 signal delete_note(file_name)
 
-@onready var settings_popup = $NoteButtonSettingsPopup
+@onready var SettingsPopupScene = preload("res://scenes/note_button_settings_popup.tscn")
+var settings_popup
+
 @onready var title = $HBoxContainer/VBoxContainer/Title
 @onready var date = $HBoxContainer/VBoxContainer/CreationDate
 
@@ -16,7 +18,6 @@ var note_name := ""
 var creation_date := ""
 var current_date_format := NotesPanel.DateFormat.DAY_MONTH_YEAR
 
-var settings_popup_global_pos: Vector2
 var settings_popup_open := false
 var open_settings_popup := false
 var warning_popup_open := false
@@ -28,19 +29,22 @@ func _ready() -> void:
     date.text = creation_date
 # }}}
 
-func _process(delta: float) -> void:
-    # {{{
+func _process(_delta: float) -> void: # {{{
+    if !has_node("NoteButtonSettingsPopup"):
+        return
+
+    var down = ""
+    if global_position.y - settings_popup.size.y < 0: 
+        down += "_down"
+
     if open_settings_popup and !settings_popup_open:
-        $AnimationPlayer.play("open_settings")
-        move_settings_popup_y(-122, delta)
+        settings_popup.open(down)
 
     elif !open_settings_popup and settings_popup_open:
-        $AnimationPlayer.play("close_settings")
-        move_settings_popup_y(122, delta)
+        settings_popup.close(down)
 # }}}
 
-func initialize(_name, _date, _date_format):
-    # {{{
+func initialize(_name, _date, _date_format): # {{{
     note_name = _name
     name = _name
 
@@ -48,72 +52,34 @@ func initialize(_name, _date, _date_format):
     current_date_format = _date_format
 # }}}
 
-## Move settings popup on the y axis
-func move_settings_popup_y(quant, delta):
-    # {{{
-    var positive = quant > 0
-
-    var weight = $AnimationPlayer.current_animation_position / $AnimationPlayer.current_animation_length
-    var start = settings_popup_global_pos.y
-
-    if global_position.y - settings_popup.size.y < 0:
-        positive = !positive
-        quant = size.y + 8
-        quant *= 1 if positive else -1
-
-    var target = start + quant
-    weight += delta * 3
-
-    var min_pos
-    var max_pos
-
-    if positive:
-        max_pos = target
-        min_pos = start
-    else:
-        max_pos = start
-        min_pos = target
-
-    if settings_popup.global_position.y != target:
-        var new_pos = lerp(start, target, weight)
-        new_pos = Vector2(settings_popup_global_pos.x, clampf(new_pos, min_pos, max_pos))
-        settings_popup.global_position = new_pos
-# }}}
-
-func set_note_name(new_name: String):
-    # {{{
+func set_note_name(new_name: String): # {{{
     title.text = new_name
     note_name = new_name
     name = new_name
 # }}}
 
-func get_settings():
-    # {{{
+func get_settings(): # {{{
     return {
         "creation_date" : creation_date,
         "current_date_format" : current_date_format,
     }
 # }}}
 
-func reload_settings():
-    # {{{
+func reload_settings(): # {{{
     $HBoxContainer/VBoxContainer/CreationDate.text = creation_date
 # }}}
 
 
-func _on_pressed() -> void:
-    # {{{
+func _on_pressed() -> void: # {{{
     open_note.emit(note_name)
 # }}}
 
-func _on_focus_exited() -> void:
-    # {{{
+func _on_focus_exited() -> void: # {{{
     if settings_popup_open:
         _on_note_settings_button_pressed()
 # }}}
 
-func _on_gui_input(event: InputEvent) -> void:
-    # {{{
+func _on_gui_input(event: InputEvent) -> void: # {{{
     var r_click = InputEventMouseButton.new()
     r_click.button_index = MOUSE_BUTTON_RIGHT
 
@@ -121,26 +87,28 @@ func _on_gui_input(event: InputEvent) -> void:
         _on_note_settings_button_pressed()
 # }}}
 
-func _on_note_settings_button_pressed() -> void:
-    # {{{
-    if !settings_popup.top_level:
-        settings_popup_global_pos = settings_popup.global_position
-        settings_popup.top_level = true
-
+func _on_note_settings_button_pressed() -> void: # {{{
+    $HBoxContainer/NoteSettingsButton.disabled = true
     open_settings_popup = !open_settings_popup
+    if !open_settings_popup:
+        return
+
+    settings_popup = SettingsPopupScene.instantiate()
+    add_child(settings_popup)
+    settings_popup.get_node("AnimationPlayer").animation_finished.connect(_on_animation_player_animation_finished)
 # }}}
 
-func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-    # {{{
+func _on_animation_player_animation_finished(anim_name: StringName) -> void: # {{{
     match anim_name:
-        "open_settings":
+        "open", "open_down":
+            $HBoxContainer/NoteSettingsButton.disabled = false
             settings_popup_open = true
-            settings_popup_global_pos = settings_popup.global_position
             settings_popup.call_deferred("grab_focus")
 
-        "close_settings":
+        "close", "close_down":
+            $HBoxContainer/NoteSettingsButton.disabled = false
             settings_popup_open = false
-            settings_popup_global_pos = settings_popup.global_position
+            settings_popup.queue_free()
 # }}}
 
 
