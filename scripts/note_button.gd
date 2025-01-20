@@ -23,8 +23,7 @@ var open_settings_popup := false
 var warning_popup_open := false
 
 
-func _ready() -> void:
-    # {{{
+func _ready() -> void: # {{{
     title.text = note_name
     date.text = creation_date
 # }}}
@@ -33,9 +32,10 @@ func _process(_delta: float) -> void: # {{{
     if !has_node("NoteButtonSettingsPopup"):
         return
 
-    var down = ""
-    if global_position.y - settings_popup.size.y < 0: 
-        down += "_down"
+    var down = "_down"
+    # Popup's position is 8px bellow the button after the close animation.
+    if global_position.y + size.y + settings_popup.size.y + 8 > get_window().size.y: 
+        down = ""
 
     if open_settings_popup and !settings_popup_open:
         settings_popup.open(down)
@@ -95,7 +95,10 @@ func _on_note_settings_button_pressed() -> void: # {{{
 
     settings_popup = SettingsPopupScene.instantiate()
     add_child(settings_popup)
+
     settings_popup.get_node("AnimationPlayer").animation_finished.connect(_on_animation_player_animation_finished)
+    settings_popup.rename.connect(_on_note_button_settings_popup_rename)
+    settings_popup.delete.connect(_on_note_button_settings_popup_delete)
 # }}}
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void: # {{{
@@ -103,6 +106,10 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void: # {
         "open", "open_down":
             $HBoxContainer/NoteSettingsButton.disabled = false
             settings_popup_open = true
+
+            settings_popup.original_position = settings_popup.global_position
+            settings_popup.top_level = true
+            settings_popup.global_position = settings_popup.original_position
             settings_popup.call_deferred("grab_focus")
 
         "close", "close_down":
@@ -112,8 +119,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void: # {
 # }}}
 
 
-func _on_title_gui_input(event: InputEvent) -> void:
-    # {{{
+func _on_title_gui_input(event: InputEvent) -> void: # {{{
     var l_click = InputEventMouseButton.new()
     l_click.button_index = MOUSE_BUTTON_LEFT
 
@@ -122,23 +128,19 @@ func _on_title_gui_input(event: InputEvent) -> void:
         title.grab_focus()
 # }}}
 
-func _on_title_text_changed(new_text: String) -> void:
-    # {{{
+func _on_title_text_changed(new_text: String) -> void: # {{{
     title.expand_to_text_length = len(new_text) <= TITLE_MAX_CHARACTERS
     title.custom_minimum_size = Vector2(138, 0)
 # }}}
 
-func _on_title_text_submitted(new_text: String) -> void:
-    # {{{
+func _on_title_text_submitted(new_text: String) -> void: # {{{
     title.editable = false
     rename_note.emit(note_name, new_text)
 # }}}
 
 
-func _on_note_button_settings_popup_delete() -> void:
-    # {{{
-    open_settings_popup = false
-    $AnimationPlayer.play("close_settings")
+func _on_note_button_settings_popup_delete() -> void: # {{{
+    _on_note_settings_button_pressed()
 
     var confirm_dialog = ConfirmationDialog.new()
 
@@ -158,20 +160,17 @@ func _on_note_button_settings_popup_delete() -> void:
         if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 # }}}
 
-func _on_confirm_dialog_confirm():
-    # {{{
+func _on_confirm_dialog_confirm(): # {{{
     delete_note.emit(note_name)
 # }}}
 
-func _on_note_button_settings_popup_rename() -> void:
-    # {{{
-    $AnimationPlayer.play("close_settings")
+func _on_note_button_settings_popup_rename() -> void: # {{{
+    _on_note_settings_button_pressed()
     title.editable = true
     title.grab_focus()
 # }}}
 
-func _on_note_button_settings_popup_focus_exited() -> void:
-    # {{{
+func _on_note_button_settings_popup_focus_exited() -> void: # {{{
     _on_note_settings_button_pressed()
 # }}}
 
