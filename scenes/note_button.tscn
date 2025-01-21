@@ -71,6 +71,7 @@ size_flags_vertical = 10
 theme_override_styles/focus = SubResource("StyleBoxFlat_d1uc7")
 theme_override_styles/read_only = SubResource("StyleBoxFlat_d1uc7")
 theme_override_styles/normal = SubResource("StyleBoxFlat_18cra")
+text = "anote"
 editable = false
 expand_to_text_length = true
 context_menu_enabled = false
@@ -79,7 +80,8 @@ context_menu_enabled = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
-text = "30/10/2020"
+text = "20/03/2023"
+visible_ratio = -0.1
 
 [connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]

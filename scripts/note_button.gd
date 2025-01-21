@@ -26,6 +26,8 @@ var warning_popup_open := false
 func _ready() -> void: # {{{
     title.text = note_name
     date.text = creation_date
+    var dt = creation_date.split(',')
+    date.visible_characters = len(dt[0])
 # }}}
 
 func _process(_delta: float) -> void: # {{{
@@ -66,7 +68,11 @@ func get_settings(): # {{{
 # }}}
 
 func reload_settings(): # {{{
-    $HBoxContainer/VBoxContainer/CreationDate.text = creation_date
+    date.text = creation_date
+    var dt = creation_date.split(',')
+    # Forces text to update
+    date.visible_characters = 2
+    date.visible_characters = len(dt[0])
 # }}}
 
 

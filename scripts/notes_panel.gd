@@ -42,6 +42,7 @@ var note_sort := NoteSort.DATE_DESCENDING
 
 var previous_note: String = ""
 var current_note: String = ""
+var text_editor: TextEditor
 
 var open_previous_note := false
 var keep_open := false
@@ -49,8 +50,7 @@ var keep_open := false
 @onready var notes_container = $VBoxContainer/Notes/ScrollContainer/VBoxContainer
 
 
-func _ready() -> void:
-    # {{{
+func _ready() -> void: # {{{
     create_note_dirs()
     var dir = DirAccess.open(note_directory)
     if dir != null:
@@ -58,6 +58,7 @@ func _ready() -> void:
             var note_button = NoteButtonScene.instantiate()
             var n_name = f.get_basename()
 
+            # As of 20/01/2024 there's no way to get file dates
             note_button.initialize(n_name, "", date_format)
             notes_container.add_child(note_button)
 
@@ -81,8 +82,7 @@ func _ready() -> void:
 ##
 ## Open the last note being edited before the app was closed,
 ## if no note was being edited returns false.
-func open_last_edited_note() -> bool:
-    # {{{
+func open_last_edited_note() -> bool: # {{{
     if previous_note == "":
         return false
 
@@ -106,48 +106,7 @@ func open_last_edited_note() -> bool:
     return true
 # }}}
 
-func format_date(date, from, to) -> String:
-    # {{{
-    if "-" in date:
-        date = date.split("-")
-    else:
-        date = date.split("/")
-
-    if from == to:
-        return "/".join(date)
-
-    # There are only 2 options, and they mirror each other: YMD DMY
-    date.reverse()
-
-    return "/".join(date)
-# }}}
-
-func sort_notes():
-    # {{{
-    var notes = []
-    for n in notes_container.get_children():
-        notes.append(n)
-        notes_container.remove_child(n)
-
-    notes.sort_custom(
-    func (a, b):
-        match note_sort:
-            NoteSort.NAME_ASCENDING:
-                return a.note_name.naturalnocasecmp_to(b.note_name) <= 0
-            NoteSort.NAME_DESCENDING:
-                return a.note_name.naturalnocasecmp_to(b.note_name) >= 0
-            NoteSort.DATE_ASCENDING:
-                return a.creation_date.naturalnocasecmp_to(b.creation_date) <= 0
-            NoteSort.DATE_DESCENDING:
-                return a.creation_date.naturalnocasecmp_to(b.creation_date) >= 0
-    )
-
-    for n in notes:
-        notes_container.add_child(n)
-# }}}
-
-func create_notes_backup() -> void:
-    # {{{
+func create_notes_backup() -> void: # {{{
     create_note_dirs()
     var warn = func(mesg: String):
         var d = ErrorDialog.new()
@@ -221,8 +180,7 @@ func create_notes_backup() -> void:
     ziper.close()
 # }}}
 
-func create_note_dirs() -> void:
-    # {{{
+func create_note_dirs() -> void: # {{{
     var dir = DirAccess.open("user://")
 
     if !dir.dir_exists("./backups"):
@@ -232,9 +190,31 @@ func create_note_dirs() -> void:
         dir.make_dir("./notes")
 # }}}
 
+func sort_notes(): # {{{
+    var notes = []
+    for n in notes_container.get_children():
+        notes.append(n)
+        notes_container.remove_child(n)
 
-func get_settings():
-    # {{{
+    notes.sort_custom(
+    func (a, b):
+        match note_sort:
+            NoteSort.NAME_ASCENDING:
+                return a.note_name.naturalnocasecmp_to(b.note_name) <= 0
+            NoteSort.NAME_DESCENDING:
+                return a.note_name.naturalnocasecmp_to(b.note_name) >= 0
+            NoteSort.DATE_ASCENDING:
+                return a.creation_date.naturalnocasecmp_to(b.creation_date) <= 0
+            NoteSort.DATE_DESCENDING:
+                return a.creation_date.naturalnocasecmp_to(b.creation_date) >= 0
+    )
+
+    for n in notes:
+        notes_container.add_child(n)
+# }}}
+
+
+func get_settings(): # {{{
     return {
         "backup_directory" : backup_directory,
         "note_directory" : note_directory,
@@ -247,20 +227,48 @@ func get_settings():
     }
 # }}}
 
-func reload_settings():
-    # {{{
+func reload_settings(): # {{{
     $VBoxContainer/Opts/VBoxContainer/Sort.select(note_sort as int)
     sort_notes()
 # }}}
 
 
-func make_note_path(n_name) -> String: return str(note_directory, "/", n_name, ".txt")
+func make_note_path(n_name: String) -> String: return str(note_directory, "/", n_name, ".txt")
 func open_panel(): $AnimationPlayer.play("open_panel")
 func close_panel(): $AnimationPlayer.play_backwards("open_panel")
 
+func format_date(date: String, from: DateFormat, to: DateFormat) -> String: # {{{
+    var dt: Array
+    if "-" in date:
+        dt = date.split("-")
+    else:
+        dt = date.split("/")
 
-func _on_create_pressed() -> void:
-    # {{{
+    if from == to:
+        return "/".join(dt)
+
+    # dt: ['30', '10', '2020,24:30:30']
+    var tmp = dt[-1].split(',')
+
+    # dt: ['30', '10']
+    dt.pop_back()
+
+    # dt: ['30', '10', '20']
+    dt.append(tmp[0])
+    var time = tmp[1]
+
+    # There are only 2 options, and they mirror each other: YMD DMY
+    dt.reverse()
+
+    var out = "/".join(dt)
+    out += "," + time
+
+    return out
+# }}}
+
+
+## `from` is used when saving without any note being open
+func _on_create_pressed(from: String = "") -> void: # {{{
     prints("Creating new note...")
     var note = str(note_directory, "/", "new_note")
     var note_id = 0
@@ -272,11 +280,12 @@ func _on_create_pressed() -> void:
     current_note = str(note, ".txt")
 
     var file = FileAccess.open(current_note, FileAccess.WRITE)
-    file.store_string("")
+    file.store_string(from)
     file.close()
 
     var note_button = NoteButtonScene.instantiate()
     var date = Time.get_date_string_from_system()
+    date += "," + Time.get_time_string_from_system()
 
     date = format_date(date, DateFormat.YEAR_MONTH_DAY, date_format)
     note_button.initialize(note.get_file(), date, date_format)
@@ -289,15 +298,13 @@ func _on_create_pressed() -> void:
     save_note_dates.emit()
 # }}}
 
-func _on_sort_item_selected(index: int) -> void:
-    # {{{
+func _on_sort_item_selected(index: int) -> void: # {{{
     note_sort = $VBoxContainer/Opts/VBoxContainer/Sort.get_item_id(index) as NoteSort
     sort_notes()
 # }}}
 
 
-func _on_note_button_rename_note(old_name, new_name: String):
-    # {{{
+func _on_note_button_rename_note(old_name, new_name: String): # {{{
     new_name = new_name.validate_filename()
     var tmp_name = new_name
 
@@ -338,11 +345,42 @@ func _on_note_button_rename_note(old_name, new_name: String):
     sort_notes()
 # }}}
 
-func _on_note_button_open_note(note_name):
-    # {{{
+func _on_note_button_open_note(note_name): # {{{
     prints("Opening note...")
     if note_name == current_note.get_basename():
-        prints("Note already open.")
+        return
+
+    if text_editor.contents_changed:
+        var d = ConfirmationDialog.new()
+        var ok_calb = func():
+            text_editor.save()
+            _on_note_button_open_note(note_name)
+
+        var discard_calb = func(act):
+            if act == "discard":
+                text_editor.contents_changed = false
+                _on_note_button_open_note(note_name)
+                d.queue_free()
+
+        d.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
+        d.theme = load("res://themes/default.tres")
+
+        d.title = "Unsaved changes!"
+        d.ok_button_text = "Save"
+
+        var msg = "Are you sure you want to switch notes?\n"
+        msg += "You have unsaved changes."
+        d.dialog_text = msg
+
+        d.get_ok_button().pressed.connect(ok_calb)
+        d.add_button("Discard", false, "discard")
+        d.custom_action.connect(discard_calb)
+
+        add_child(d)
+        d.show()
+        for c in d.get_children(true):
+            if c is Panel: c.remove_theme_stylebox_override("panel")
+            if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         return
 
     var title = note_name
@@ -364,8 +402,7 @@ func _on_note_button_open_note(note_name):
     current_note = path
 # }}}
 
-func _on_note_button_delete_note(note_name):
-    # {{{
+func _on_note_button_delete_note(note_name): # {{{
     var path = make_note_path(note_name)
     var res = DirAccess.remove_absolute(path)
 
@@ -388,9 +425,32 @@ func _on_note_button_delete_note(note_name):
 # }}}
 
 
-func _on_text_editor_save_note(note_contents):
-    # {{{
+func _on_text_editor_save_note(note_contents):  # {{{
     prints("Saving note...")
+
+    if current_note.is_empty():
+        var d = ConfirmationDialog.new()
+        var ok_calb = func():
+            _on_create_pressed(text_editor.text)
+            text_editor.save()
+
+        d.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
+        d.theme = load("res://themes/default.tres")
+
+        d.title = "Unsaved changes!"
+        d.ok_button_text = "Save"
+
+        var msg = "Would you like to create a new note and save?"
+        d.dialog_text = msg
+
+        d.get_ok_button().pressed.connect(ok_calb)
+
+        add_child(d)
+        d.show()
+        for c in d.get_children(true):
+            if c is Panel: c.remove_theme_stylebox_override("panel")
+            if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        return
 
     var file = FileAccess.open(current_note, FileAccess.WRITE)
     if file == null:

@@ -31,6 +31,7 @@ func _ready() -> void:
     notes_panel.note_deleted.connect(text_editor._on_notes_panel_note_deleted)
     notes_panel.save_note_dates.connect(settings._on_notes_panel_save_note_dates)
     text_editor.save_note.connect(notes_panel._on_text_editor_save_note)
+    notes_panel.text_editor = text_editor
 
     var sav = func(_a): if "*" in title: change_title(title.erase(len(title)-1, 1))
     var txt = func(): if not "*" in title: change_title("%s*" % title)
@@ -77,10 +78,13 @@ func _notification(what: int) -> void:
             if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
         d.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-        d.dialog_text = "Are you sure you want to exit?\nYou have unsaved changes."
-        d.ok_button_text = "Save & exit"
+        d.ok_button_text = "Save"
 
-        d.add_button("Exit w/o saving", false, "exit")
+        var msg = "Are you sure you want to exit?\n"
+        msg += "You have unsaved changes."
+        d.dialog_text = msg
+
+        d.add_button("Exit", false, "exit")
         d.show()
         return
 

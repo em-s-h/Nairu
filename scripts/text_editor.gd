@@ -30,8 +30,7 @@ var font_size := 16
 var font
 
 
-func _input(event: InputEvent) -> void:
-    # {{{
+func _input(event: InputEvent) -> void: # {{{
     if event.is_action_pressed("shortcut_save_note", true):
         editable = false
         save()
@@ -40,17 +39,12 @@ func _input(event: InputEvent) -> void:
         editable = true
 # }}}
 
-## Emit `save_note` signal
-##
-## Shorter way of doing `save_note.emit(text)`
-func save() -> void:
-    # {{{
+func save() -> void: # {{{
     contents_changed = false
     save_note.emit(text)
 # }}}
 
-func get_settings():
-    # {{{
+func get_settings(): # {{{
     return {
         "line_spacing" : line_spacing,
         "line_numbers" : line_numbers,
@@ -61,41 +55,35 @@ func get_settings():
     }
 # }}}
 
-func reload_settings():
-    # {{{
-    gutters_draw_line_numbers = line_numbers and note_open
+func reload_settings(): # {{{
+    gutters_draw_line_numbers = line_numbers
     add_theme_constant_override("line_spacing", line_spacing)
     add_theme_font_size_override("font_size", font_size)
 # }}}
 
 
-func _on_notes_panel_edit_note(contents):
-    # {{{
+func _on_notes_panel_edit_note(contents): # {{{
     text = contents
     note_open = true
     gutters_draw_line_numbers = line_numbers
     contents_changed = false
 # }}}
 
-func _on_notes_panel_note_deleted(is_current: bool) -> void:
-    # {{{
+func _on_notes_panel_note_deleted(is_current: bool) -> void: # {{{
     if is_current:
         text = ""
         note_open = false
-        gutters_draw_line_numbers = false
         contents_changed = false
 # }}}
 
 
-func _on_text_changed() -> void:
-    # {{{
+func _on_text_changed() -> void: # {{{
     contents_changed = true
     $Delay.start(delay_time)
 # }}}
 
-func _on_delay_timeout() -> void:
-    # {{{
-    if auto_save:
+func _on_delay_timeout() -> void: # {{{
+    if auto_save and note_open:
         save()
 # }}}
 
