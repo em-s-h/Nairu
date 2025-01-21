@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cuvx8mq52xkhh"]
+[gd_scene load_steps=4 format=3 uid="uid://cuvx8mq52xkhh"]
 
 [ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/default.tres" id="1_v7k1u"]
 [ext_resource type="Script" path="res://scripts/text_editor_settings.gd" id="2_d4yq6"]
+[ext_resource type="Texture2D" uid="uid://dahtm5esse8rr" path="res://icons/reload.svg" id="3_iydkc"]
 
 [node name="TextEditorSettings" type="Panel"]
 custom_minimum_size = Vector2(0, 369)
@@ -29,9 +30,9 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 0
+theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 0
-columns = 2
+columns = 3
 
 [node name="Label" type="Label" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
@@ -40,10 +41,23 @@ size_flags_vertical = 6
 text = "Font
 "
 
+[node name="LoadDefaultFont" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("3_iydkc")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="Font" type="Button" parent="ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(56, 0)
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 text = "To-do"
 
@@ -54,9 +68,22 @@ size_flags_vertical = 6
 text = "Font size
 "
 
+[node name="LoadDefaultFontSize" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("3_iydkc")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="FontSize" type="LineEdit" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 theme_type_variation = &"SettingLineEdit"
 text = "16"
@@ -70,10 +97,23 @@ size_flags_vertical = 6
 text = "Auto save
 "
 
+[node name="LoadDefaultAutoSave" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("3_iydkc")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="AutoSave" type="CheckButton" parent="ScrollContainer/GridContainer"]
 clip_contents = true
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 button_pressed = true
 
@@ -83,9 +123,22 @@ size_flags_horizontal = 2
 size_flags_vertical = 6
 text = "Line numbers"
 
+[node name="LoadDefaultLineNumbers" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("3_iydkc")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="LineNumbers" type="CheckButton" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 
 [node name="Label5" type="Label" parent="ScrollContainer/GridContainer"]
@@ -94,9 +147,22 @@ size_flags_horizontal = 2
 size_flags_vertical = 6
 text = "Line spacing"
 
+[node name="LoadDefaultLineSpacing" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("3_iydkc")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="LineSpacing" type="LineEdit" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 theme_type_variation = &"SettingLineEdit"
 text = "3"
@@ -110,9 +176,22 @@ size_flags_vertical = 6
 text = "Editor mode
 "
 
+[node name="LoadDefaultEditorMode" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("3_iydkc")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="EditorMode" type="OptionButton" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 flat = true
 selected = 0
@@ -121,8 +200,14 @@ popup/item_0/text = "Normal"
 popup/item_1/text = "Vim"
 popup/item_1/id = 1
 
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultFont" to="." method="_on_load_default_setting_pressed" binds= ["font"]]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultFontSize" to="." method="_on_load_default_setting_pressed" binds= ["font_size"]]
 [connection signal="text_submitted" from="ScrollContainer/GridContainer/FontSize" to="." method="_on_font_size_text_submitted"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultAutoSave" to="." method="_on_load_default_setting_pressed" binds= ["auto_save"]]
 [connection signal="toggled" from="ScrollContainer/GridContainer/AutoSave" to="." method="_on_auto_save_toggled"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultLineNumbers" to="." method="_on_load_default_setting_pressed" binds= ["line_numbers"]]
 [connection signal="toggled" from="ScrollContainer/GridContainer/LineNumbers" to="." method="_on_line_numbers_toggled"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultLineSpacing" to="." method="_on_load_default_setting_pressed" binds= ["line_spacing"]]
 [connection signal="text_submitted" from="ScrollContainer/GridContainer/LineSpacing" to="." method="_on_line_spacing_text_submitted"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultEditorMode" to="." method="_on_load_default_setting_pressed" binds= ["editor_mode"]]
 [connection signal="item_selected" from="ScrollContainer/GridContainer/EditorMode" to="." method="_on_editor_mode_item_selected"]

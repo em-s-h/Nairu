@@ -5,7 +5,9 @@ extends Panel
 
 signal setting_changed(key: String, val)
 
+## The name of the node that this settings panel represents
 var represents_node: String = ""
+var settings: Settings
 
 
 func set_setting(key: String, val) -> void:

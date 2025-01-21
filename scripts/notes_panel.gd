@@ -94,7 +94,7 @@ func open_last_edited_note() -> bool: # {{{
 
         notif.color = Color.RED
         notif.message = msg
-        notif.duration = 6
+        notif.duration = 5
 
         get_tree().root.get_node("Main").add_child(notif)
         return false
@@ -230,6 +230,17 @@ func get_settings(): # {{{
 func reload_settings(): # {{{
     $VBoxContainer/Opts/VBoxContainer/Sort.select(note_sort as int)
     sort_notes()
+# }}}
+
+func get_default_setting(setting_name: String): # {{{
+    match setting_name:
+        "backup_directory"      : return DEFAULT_NOTE_BACKUP_DIRECTORY
+        "backup_option"         : return BackupOptions.OFF
+        "note_directory"        : return DEFAULT_NOTE_DIRECTORY
+        "date_format"           : return DateFormat.DAY_MONTH_YEAR
+        "note_sort"             : return NoteSort.DATE_DESCENDING
+        "open_previous_note"    : return false
+        "keep_open"             : return false
 # }}}
 
 

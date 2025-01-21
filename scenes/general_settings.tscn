@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bjat3thnxa3gk"]
+[gd_scene load_steps=4 format=3 uid="uid://bjat3thnxa3gk"]
 
 [ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/default.tres" id="1_7ctqe"]
 [ext_resource type="Script" path="res://scripts/general_settings.gd" id="2_6y0au"]
+[ext_resource type="Texture2D" uid="uid://dahtm5esse8rr" path="res://icons/reload.svg" id="3_wj8ek"]
 
 [node name="GeneralSettings" type="Panel"]
 anchors_preset = 15
@@ -28,9 +29,9 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 0
+theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 0
-columns = 2
+columns = 3
 
 [node name="Label" type="Label" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
@@ -38,9 +39,22 @@ size_flags_horizontal = 2
 size_flags_vertical = 6
 text = "App theme"
 
+[node name="LoadDefaultAppTheme" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("3_wj8ek")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="AppTheme" type="OptionButton" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 theme_type_variation = &"SettingLineEdit"
 flat = true
@@ -49,4 +63,5 @@ selected = 0
 item_count = 1
 popup/item_0/text = "Default"
 
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultAppTheme" to="." method="_on_load_default_setting_pressed" binds= ["app_theme"]]
 [connection signal="item_selected" from="ScrollContainer/GridContainer/AppTheme" to="." method="_on_app_theme_item_selected"]

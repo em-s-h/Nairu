@@ -15,13 +15,11 @@ var app_theme = EditorThemes.DEFAULT
 var config: ConfigFile
 
 
-func _ready() -> void:
-    # {{{
+func _ready() -> void: # {{{
     config = ConfigFile.new()
 # }}}
 
-func open_settings():
-    # {{{
+func open_settings(): # {{{
     settings_window = SettingsWindowScene.instantiate()
     add_child(settings_window)
 
@@ -31,6 +29,7 @@ func open_settings():
     for c in tab_cont.get_children():
         if c is SettingsPanel:
             c.setting_changed.connect(_on_settings_panel_setting_changed)
+            c.settings = self
 
     var err = config.load(CONFIG_PATH)
     if err != OK:
@@ -49,8 +48,7 @@ func open_settings():
     settings_window.show()
 # }}}
 
-func save_settings():
-    # {{{
+func save_settings(): # {{{
     config.clear()
     var save_nodes = get_tree().get_nodes_in_group("Persist")
     for node in save_nodes:
@@ -65,8 +63,7 @@ func save_settings():
     config.save(CONFIG_PATH)
 # }}}
 
-func load_settings():
-    # {{{
+func load_settings(): # {{{
     var err = config.load(CONFIG_PATH)
     if err != OK:
         var d = ErrorDialog.new()
@@ -95,13 +92,8 @@ func load_settings():
             node.call("reload_settings")
 # }}}
 
-func load_default_settings():
-    # {{{
-    pass
-# }}}
 
-func _on_notes_panel_save_note_dates():
-    # {{{
+func _on_notes_panel_save_note_dates(): # {{{
     var save_nodes = get_tree().get_nodes_in_group("Persist")
     for node in save_nodes:
         if not node is NoteButton:
@@ -115,21 +107,38 @@ func _on_notes_panel_save_note_dates():
 # }}}
 
 
-func get_settings():
-    # {{{
+func get_settings(): # {{{
     return {
         "app_theme" : app_theme,
     }
 # }}}
 
-func reload_settings():
-    # {{{
+func reload_settings(): # {{{
     pass
 # }}}
 
+func get_default_setting(setting_name: String, from_node: String): # {{{
+    if from_node == "Settings":
+        match setting_name:
+            "app_theme" : return EditorThemes.DEFAULT
 
-func _on_settings_panel_setting_changed(key: String, val):
-    # {{{
+    var p_nodes = get_tree().get_nodes_in_group("Persist")
+    for node in p_nodes:
+        if node is Settings:
+            continue
+
+        if !node.has_method("get_default_setting"):
+            prints("Persistent node '%s' doesn't have 'get_default_setting' method, skipping." % node.name)
+            continue
+
+        if node.name == from_node:
+            return node.call("get_default_setting", setting_name)
+
+    return ERR_DOES_NOT_EXIST
+# }}}
+
+
+func _on_settings_panel_setting_changed(key: String, val): # {{{
     var err = config.load(CONFIG_PATH)
     if err != OK:
         var d = ErrorDialog.new()

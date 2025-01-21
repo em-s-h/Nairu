@@ -26,10 +26,9 @@ anchor_bottom = 1.0
 offset_bottom = -30.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 3
+current_tab = 0
 
 [node name="Text Editor" parent="TabContainer" instance=ExtResource("2_lglug")]
-visible = false
 custom_minimum_size = Vector2(0, 375)
 layout_mode = 2
 metadata/_tab_index = 0
@@ -47,6 +46,7 @@ layout_mode = 2
 metadata/_tab_index = 2
 
 [node name="About" parent="TabContainer" instance=ExtResource("5_8skb0")]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 

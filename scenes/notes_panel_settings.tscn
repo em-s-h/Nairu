@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://k6ifqabl5f46"]
+[gd_scene load_steps=5 format=3 uid="uid://k6ifqabl5f46"]
 
 [ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/default.tres" id="1_lpnio"]
 [ext_resource type="Script" path="res://scripts/notes_panel_settings.gd" id="2_ves64"]
 [ext_resource type="Texture2D" uid="uid://koooahqdhl2a" path="res://icons/folder.svg" id="3_1u8xf"]
+[ext_resource type="Texture2D" uid="uid://dahtm5esse8rr" path="res://icons/reload.svg" id="4_okwjg"]
 
 [node name="NotesPanelSettings" type="Panel"]
 anchors_preset = 15
@@ -29,9 +30,9 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 0
+theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 0
-columns = 2
+columns = 3
 
 [node name="Label" type="Label" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
@@ -40,10 +41,23 @@ size_flags_vertical = 6
 text = "Save directory
 "
 
+[node name="LoadDefaultNoteDirectory" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("4_okwjg")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="NoteDirectory" type="Button" parent="ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(31, 31)
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 theme_type_variation = &"IconButton"
 icon = ExtResource("3_1u8xf")
@@ -67,10 +81,23 @@ text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 layout_mode = 2
 text = "Backups directory"
 
+[node name="LoadDefaultBackupDirectory" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("4_okwjg")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="BackupDirectory" type="Button" parent="ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(31, 31)
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 theme_type_variation = &"IconButton"
 icon = ExtResource("3_1u8xf")
@@ -94,9 +121,22 @@ text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 layout_mode = 2
 text = "Note backups"
 
+[node name="LoadDefaultBackupOption" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("4_okwjg")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="BackupOption" type="OptionButton" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 theme_type_variation = &"SettingLineEdit"
 flat = true
@@ -116,9 +156,22 @@ size_flags_vertical = 6
 text = "Date format
 "
 
+[node name="LoadDefaultDateFormat" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("4_okwjg")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="DateFormat" type="OptionButton" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 theme_type_variation = &"SettingLineEdit"
 flat = true
@@ -135,13 +188,33 @@ size_flags_horizontal = 2
 size_flags_vertical = 6
 text = "Keep note panel open"
 
+[node name="LoadDefaultKeepOpen" type="Button" parent="ScrollContainer/GridContainer"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Load default value"
+theme_type_variation = &"IconButton"
+icon = ExtResource("4_okwjg")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
 [node name="KeepOpen" type="CheckButton" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 size_flags_vertical = 6
 
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultNoteDirectory" to="." method="_on_load_default_setting_pressed" binds= ["note_directory"]]
 [connection signal="pressed" from="ScrollContainer/GridContainer/NoteDirectory" to="." method="_on_note_directory_pressed"]
+[connection signal="text_submitted" from="ScrollContainer/GridContainer/NoteDirectory/LineEdit" to="." method="_on_note_directory_line_edit_submitted"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultBackupDirectory" to="." method="_on_load_default_setting_pressed" binds= ["backup_directory"]]
 [connection signal="pressed" from="ScrollContainer/GridContainer/BackupDirectory" to="." method="_on_backup_directory_pressed"]
+[connection signal="text_submitted" from="ScrollContainer/GridContainer/BackupDirectory/LineEdit" to="." method="_on_backup_directory_line_edit_submitted"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultBackupOption" to="." method="_on_load_default_setting_pressed" binds= ["backup_option"]]
 [connection signal="item_selected" from="ScrollContainer/GridContainer/BackupOption" to="." method="_on_backup_option_item_selected"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultDateFormat" to="." method="_on_load_default_setting_pressed" binds= ["date_format"]]
 [connection signal="item_selected" from="ScrollContainer/GridContainer/DateFormat" to="." method="_on_date_format_item_selected"]
+[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultKeepOpen" to="." method="_on_load_default_setting_pressed" binds= ["keep_open"]]
 [connection signal="toggled" from="ScrollContainer/GridContainer/KeepOpen" to="." method="_on_keep_open_toggled"]

@@ -61,6 +61,15 @@ func reload_settings(): # {{{
     add_theme_font_size_override("font_size", font_size)
 # }}}
 
+func get_default_setting(setting_name: String): # {{{
+    match setting_name: 
+        "editor_mode"   : return EditorMode.DEFAULT
+        "auto_save"     : return false
+        "delay_time"    : return 0.5
+        'line_numbers'  : return true
+        "line_spacing"  : return 2
+# }}}
+
 
 func _on_notes_panel_edit_note(contents): # {{{
     text = contents

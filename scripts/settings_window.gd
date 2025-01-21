@@ -3,7 +3,7 @@ extends Window
 
 
 ## Represents the currently open settings panel
-var current_section := "Text Editor"
+var current_section := "TextEditor"
 
 
 func _ready() -> void:
