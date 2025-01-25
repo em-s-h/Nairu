@@ -1,14 +1,31 @@
 extends SettingsPanel
 
 
-func _ready() -> void:
+@onready var FontPickerScene = preload("res://scenes/font_picker.tscn")
+
+
+func _ready() -> void: # {{{
     represents_node = "TextEditor"
     setting_changed.connect(_on_settings_changed)
-
+# }}}
 
 func set_setting(key: String, val): # {{{
     super(key, val)
     _on_settings_changed(key, val)
+# }}}
+
+
+func _on_font_pressed() -> void: # {{{
+    var font_picker = FontPickerScene.instantiate()
+    add_child(font_picker)
+    font_picker.show()
+
+    var f_sel = func(font_name):
+        font_name = str(font_name)
+        $ScrollContainer/GridContainer/Font.text = font_name
+        setting_changed.emit("font", font_name)
+        
+    font_picker.font_selected.connect(f_sel)
 # }}}
 
 func _on_font_size_text_submitted(new_text: String) -> void: # {{{
@@ -20,6 +37,7 @@ func _on_font_size_text_submitted(new_text: String) -> void: # {{{
     setting_changed.emit("font_size", int(new_text))
 # }}}
 
+
 func _on_line_spacing_text_submitted(new_text: String) -> void: # {{{
     if !new_text.is_valid_int():
         return 
@@ -29,14 +47,15 @@ func _on_line_spacing_text_submitted(new_text: String) -> void: # {{{
     setting_changed.emit("line_spacing", int(new_text))
 # }}}
 
-func _on_auto_save_toggled(toggled_on: bool) -> void: # {{{
-    $ScrollContainer/GridContainer/AutoSave.release_focus()
-    setting_changed.emit("auto_save", toggled_on)
-# }}}
-
 func _on_line_numbers_toggled(toggled_on: bool) -> void: # {{{
     $ScrollContainer/GridContainer/LineNumbers.release_focus()
     setting_changed.emit("line_numbers", toggled_on)
+# }}}
+
+
+func _on_auto_save_toggled(toggled_on: bool) -> void: # {{{
+    $ScrollContainer/GridContainer/AutoSave.release_focus()
+    setting_changed.emit("auto_save", toggled_on)
 # }}}
 
 func _on_editor_mode_item_selected(index: int) -> void: # {{{
@@ -64,18 +83,24 @@ func _on_load_default_setting_pressed(setting_name: String) -> void: # {{{
     set_setting(setting_name, def_set)
 
     match setting_name:
-        "font": prints('todo')
+        "font":
+            $ScrollContainer/GridContainer/Font.text = str(def_set)
+            setting_changed.emit("font", str(def_set))
+
         "font_size": _on_font_size_text_submitted(def_set)
-        # "line_spacing": _on_line_spacing_text_submitted(def_set)
-        "auto_save": _on_auto_save_toggled(def_set)
-        "line_numbers": _on_line_numbers_toggled(def_set)
+        "line_spacing": _on_line_spacing_text_submitted(def_set)
         "editor_mode": _on_editor_mode_item_selected(def_set)
+
+        # "line_numbers": _on_line_numbers_toggled(def_set)
+        # "auto_save": _on_auto_save_toggled(def_set)
 # }}}
 
 func show_load_default_button(setting_name: String, _show: bool) -> void: # {{{
     var a = 1 if _show else 0
     match setting_name:
-        "font": prints('todo')
+        "font": 
+            $ScrollContainer/GridContainer/LoadDefaultFont.self_modulate.a = a
+
         "font_size": 
             $ScrollContainer/GridContainer/LoadDefaultFontSize.self_modulate.a = a
 

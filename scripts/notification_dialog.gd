@@ -14,8 +14,7 @@ var duration: float = 1
 var color: Color = Color.BLUE
 
 
-func _ready() -> void:
-    # {{{
+func _ready() -> void: # {{{
     progress_bar.max_value = duration
     timer.wait_time = duration
 

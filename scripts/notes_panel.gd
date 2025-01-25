@@ -30,8 +30,8 @@ signal save_note_dates()
 signal note_deleted(is_current: bool)
 signal note_changed(new_note: String)
 
-@export var NotificationDialogScene = preload("res://scenes/notification_dialog.tscn")
-@export var NoteButtonScene = preload("res://scenes/note_button.tscn")
+@onready var NotificationDialogScene = preload("res://scenes/notification_dialog.tscn")
+@onready var NoteButtonScene = preload("res://scenes/note_button.tscn")
 
 var backup_directory = DEFAULT_NOTE_BACKUP_DIRECTORY
 var note_directory = DEFAULT_NOTE_DIRECTORY

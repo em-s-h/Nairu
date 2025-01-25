@@ -27,7 +27,7 @@ var auto_save := true
 var delay_time := 0.5
 
 var font_size := 16
-var font
+var font := "monospace"
 
 
 func _input(event: InputEvent) -> void: # {{{
@@ -52,6 +52,7 @@ func get_settings(): # {{{
         "delay_time" : delay_time,
         "auto_save" : auto_save,
         "note_open" : note_open,
+        "font": font,
     }
 # }}}
 
@@ -59,6 +60,15 @@ func reload_settings(): # {{{
     gutters_draw_line_numbers = line_numbers
     add_theme_constant_override("line_spacing", line_spacing)
     add_theme_font_size_override("font_size", font_size)
+
+    var f: SystemFont = load("res://themes/sys-font.tres")
+    var f_names = PackedStringArray([str(font)])
+    f.font_names = f_names
+
+    prints("new font", font)
+    add_theme_font_override("font", f)
+
+    text += ""
 # }}}
 
 func get_default_setting(setting_name: String): # {{{
@@ -68,6 +78,7 @@ func get_default_setting(setting_name: String): # {{{
         "delay_time"    : return 0.5
         'line_numbers'  : return true
         "line_spacing"  : return 2
+        "font"          : return "monospace"
 # }}}
 
 

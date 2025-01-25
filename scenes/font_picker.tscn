@@ -1,0 +1,134 @@
+[gd_scene load_steps=3 format=3 uid="uid://c37uc4epmvyvc"]
+
+[ext_resource type="Script" uid="uid://npg5my22ytfp" path="res://scripts/font_picker.gd" id="1_3di5a"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f3rvi"]
+bg_color = Color(0.960784, 0.960784, 0.960784, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.490196, 0.490196, 0.490196, 1)
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[node name="FontPicker" type="Window"]
+title = "Select a font"
+initial_position = 4
+size = Vector2i(450, 500)
+unresizable = true
+script = ExtResource("1_3di5a")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LineEdit" type="LineEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 50.0
+offset_top = 25.0
+offset_right = -50.0
+offset_bottom = 57.0
+grow_horizontal = 2
+size_flags_vertical = 0
+theme_type_variation = &"LineEditFont"
+placeholder_text = "Search font name"
+
+[node name="Panel" type="Panel" parent="Panel"]
+custom_minimum_size = Vector2(350, 350)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -175.0
+offset_right = 125.0
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_f3rvi")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FontButtonContainer" type="VBoxContainer" parent="Panel/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="Button2" type="Button" parent="Panel/Panel/ScrollContainer/FontButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"FontButton"
+text = "Sans-Serif font (System default)"
+
+[node name="Button3" type="Button" parent="Panel/Panel/ScrollContainer/FontButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"FontButton"
+text = "Serif font (System default)"
+
+[node name="Button" type="Button" parent="Panel/Panel/ScrollContainer/FontButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"FontButton"
+text = "Monospace font (System default)"
+
+[node name="Button4" type="Button" parent="Panel/Panel/ScrollContainer/FontButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"FontButton"
+text = "Cursive font (System default)"
+
+[node name="Button5" type="Button" parent="Panel/Panel/ScrollContainer/FontButtonContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"FontButton"
+text = "Fantasy font (System default)"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -54.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 10
+
+[node name="Cancel" type="Button" parent="Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "Cancel"
+
+[node name="Select" type="Button" parent="Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "Select"
+
+[connection signal="text_changed" from="Panel/LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="pressed" from="Panel/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Panel/HBoxContainer/Select" to="." method="_on_select_pressed"]
