@@ -2,8 +2,13 @@ class_name NotesPanel
 extends Node
 
 
-const DEFAULT_NOTE_BACKUP_DIRECTORY = "user://backups"
-const DEFAULT_NOTE_DIRECTORY = "user://notes"
+const DEFAULT_NOTE_BACKUP_DIRECTORY := "user://backups"
+const DEFAULT_NOTE_DIRECTORY        := "user://notes"
+const DEFAULT_BACKUP_OPTION         := BackupOptions.OFF
+const DEFAULT_DATE_FORMAT           := DateFormat.DAY_MONTH_YEAR
+const DEFAULT_OPEN_PREVIOUS_NOTE    := true
+const DEFAULT_KEEP_OPEN             := true
+const DEFAULT_NOTE_SORT             := NoteSort.DATE_ASCENDING
 
 # Enums {{{
 enum DateFormat {
@@ -36,16 +41,16 @@ signal note_changed(new_note: String)
 var backup_directory = DEFAULT_NOTE_BACKUP_DIRECTORY
 var note_directory = DEFAULT_NOTE_DIRECTORY
 
-var backup_option := BackupOptions.ON_APP_OPEN
-var date_format := DateFormat.DAY_MONTH_YEAR
-var note_sort := NoteSort.DATE_DESCENDING
+var backup_option := DEFAULT_BACKUP_OPTION
+var date_format := DEFAULT_DATE_FORMAT
+var note_sort := DEFAULT_NOTE_SORT
+
+var open_previous_note := DEFAULT_OPEN_PREVIOUS_NOTE
+var keep_open := DEFAULT_KEEP_OPEN
 
 var previous_note: String = ""
 var current_note: String = ""
 var text_editor: TextEditor
-
-var open_previous_note := false
-var keep_open := false
 
 @onready var notes_container = $VBoxContainer/Notes/ScrollContainer/VBoxContainer
 
@@ -235,12 +240,12 @@ func reload_settings(): # {{{
 func get_default_setting(setting_name: String): # {{{
     match setting_name:
         "backup_directory"      : return DEFAULT_NOTE_BACKUP_DIRECTORY
-        "backup_option"         : return BackupOptions.OFF
         "note_directory"        : return DEFAULT_NOTE_DIRECTORY
-        "date_format"           : return DateFormat.DAY_MONTH_YEAR
-        "note_sort"             : return NoteSort.DATE_DESCENDING
-        "open_previous_note"    : return false
-        "keep_open"             : return false
+        "backup_option"         : return DEFAULT_BACKUP_OPTION
+        "date_format"           : return DEFAULT_DATE_FORMAT
+        "note_sort"             : return DEFAULT_NOTE_SORT
+        "open_previous_note"    : return DEFAULT_OPEN_PREVIOUS_NOTE
+        "keep_open"             : return DEFAULT_KEEP_OPEN
 # }}}
 
 

@@ -87,12 +87,9 @@ func _on_load_default_setting_pressed(setting_name: String) -> void: # {{{
             $ScrollContainer/GridContainer/Font.text = str(def_set)
             setting_changed.emit("font", str(def_set))
 
-        "font_size": _on_font_size_text_submitted(def_set)
-        "line_spacing": _on_line_spacing_text_submitted(def_set)
+        "font_size": _on_font_size_text_submitted(str(def_set))
+        "line_spacing": _on_line_spacing_text_submitted(str(def_set))
         "editor_mode": _on_editor_mode_item_selected(def_set)
-
-        # "line_numbers": _on_line_numbers_toggled(def_set)
-        # "auto_save": _on_auto_save_toggled(def_set)
 # }}}
 
 func show_load_default_button(setting_name: String, _show: bool) -> void: # {{{
@@ -106,13 +103,6 @@ func show_load_default_button(setting_name: String, _show: bool) -> void: # {{{
 
         "line_spacing": 
             $ScrollContainer/GridContainer/LoadDefaultLineSpacing.self_modulate.a = a
-
-        # Toggles
-        # "auto_save": 
-        #     $ScrollContainer/GridContainer/LoadDefaultAutoSave.self_modulate.a = a
-        #
-        # "line_numbers":
-        #     $ScrollContainer/GridContainer/LoadDefaultLineNumbers.self_modulate.a = a
 
         "editor_mode":
             $ScrollContainer/GridContainer/LoadDefaultEditorMode.self_modulate.a = a

@@ -2,6 +2,14 @@ class_name TextEditor
 extends CodeEdit
 
 
+const DEFAULT_EDITOR_MODE   := EditorMode.DEFAULT
+const DEFAULT_LINE_NUMBERS  := true
+const DEFAULT_LINE_SPACING  := 2
+const DEFAULT_AUTO_SAVE     := false
+const DEFAULT_DELAY_TIME    := 0.5
+const DEFAULT_FONT_SIZE     := 16
+const DEFAULT_FONT          := "monospace"
+
 enum EditorMode {
     DEFAULT,
     VIM,
@@ -15,19 +23,19 @@ enum VimMode {
 
 signal save_note(contents)
 
-var editor_mode = EditorMode.DEFAULT
+var editor_mode = DEFAULT_EDITOR_MODE
+var line_numbers := DEFAULT_LINE_NUMBERS
+var line_spacing := DEFAULT_LINE_SPACING
+
+var auto_save := DEFAULT_AUTO_SAVE
+var delay_time := DEFAULT_DELAY_TIME
+
+var font_size := DEFAULT_FONT_SIZE
+var font := DEFAULT_FONT
+
 var vim_mode = VimMode.NORMAL
-
-var line_numbers := true
-var line_spacing := 2
-
 var contents_changed := false
 var note_open := false
-var auto_save := true
-var delay_time := 0.5
-
-var font_size := 16
-var font := "monospace"
 
 
 func _input(event: InputEvent) -> void: # {{{
@@ -65,20 +73,19 @@ func reload_settings(): # {{{
     var f_names = PackedStringArray([str(font)])
     f.font_names = f_names
 
-    prints("new font", font)
     add_theme_font_override("font", f)
-
     text += ""
 # }}}
 
 func get_default_setting(setting_name: String): # {{{
     match setting_name: 
-        "editor_mode"   : return EditorMode.DEFAULT
-        "auto_save"     : return false
-        "delay_time"    : return 0.5
-        'line_numbers'  : return true
-        "line_spacing"  : return 2
-        "font"          : return "monospace"
+        "editor_mode"   : return DEFAULT_EDITOR_MODE
+        "auto_save"     : return DEFAULT_AUTO_SAVE
+        "delay_time"    : return DEFAULT_DELAY_TIME
+        "line_numbers"  : return DEFAULT_LINE_NUMBERS
+        "line_spacing"  : return DEFAULT_LINE_SPACING
+        "font_size"     : return DEFAULT_FONT_SIZE
+        "font"          : return DEFAULT_FONT
 # }}}
 
 

@@ -3,15 +3,17 @@ extends Node
 
 
 const CONFIG_PATH = "user://config.cfg"
+const DEFAULT_EDITOR_THEME := EditorThemes.DEFAULT
 
 enum EditorThemes {
     DEFAULT,
+    DARK,
 }
 
 var SettingsWindowScene = preload("res://scenes/settings_window.tscn")
 var settings_window: SettingsWindow
 
-var app_theme = EditorThemes.DEFAULT
+var app_theme := DEFAULT_EDITOR_THEME
 var config: ConfigFile
 
 
@@ -120,7 +122,7 @@ func reload_settings(): # {{{
 func get_default_setting(setting_name: String, from_node: String): # {{{
     if from_node == "Settings":
         match setting_name:
-            "app_theme" : return EditorThemes.DEFAULT
+            "app_theme" : return DEFAULT_EDITOR_THEME
 
     var p_nodes = get_tree().get_nodes_in_group("Persist")
     for node in p_nodes:

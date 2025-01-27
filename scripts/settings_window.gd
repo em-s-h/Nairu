@@ -2,6 +2,9 @@ class_name SettingsWindow
 extends Window
 
 
+## Padding added at the bottom for the exit button
+const BOTTOM_PADDING := 61
+
 ## Represents the currently open settings panel
 var current_section := "TextEditor"
 
@@ -9,6 +12,7 @@ var current_section := "TextEditor"
 func _ready() -> void:
     # {{{
     title = "Settings"
+    _on_tab_container_tab_changed(0)
 # }}}
 
 func reload_settings(conf: ConfigFile):
@@ -34,7 +38,7 @@ func reload_settings(conf: ConfigFile):
 func _on_tab_container_tab_changed(tab: int) -> void:
     # {{{
     var tab_c = $TabContainer.get_tab_control(tab)
-    var s = Vector2i(size.x, int(tab_c.custom_minimum_size.y) + 61)
+    var s = Vector2i(size.x, int(tab_c.custom_minimum_size.y) + BOTTOM_PADDING)
     size = s
 
     if tab_c is SettingsPanel:

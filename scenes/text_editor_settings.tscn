@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://dahtm5esse8rr" path="res://icons/reload.svg" id="3_iydkc"]
 
 [node name="TextEditorSettings" type="Panel"]
-custom_minimum_size = Vector2(0, 369)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -95,7 +94,7 @@ size_flags_vertical = 6
 text = "Auto save
 "
 
-[node name="LoadDefaultAutoSave" type="Button" parent="ScrollContainer/GridContainer"]
+[node name="Placeholder" type="Control" parent="ScrollContainer/GridContainer"]
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
@@ -103,10 +102,6 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 tooltip_text = "Load default value"
 theme_type_variation = &"IconButton"
-icon = ExtResource("3_iydkc")
-flat = true
-icon_alignment = 1
-expand_icon = true
 
 [node name="AutoSave" type="CheckButton" parent="ScrollContainer/GridContainer"]
 clip_contents = true
@@ -121,7 +116,7 @@ size_flags_horizontal = 2
 size_flags_vertical = 6
 text = "Line numbers"
 
-[node name="LoadDefaultLineNumbers" type="Button" parent="ScrollContainer/GridContainer"]
+[node name="Placeholder2" type="Control" parent="ScrollContainer/GridContainer"]
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
@@ -129,10 +124,6 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 tooltip_text = "Load default value"
 theme_type_variation = &"IconButton"
-icon = ExtResource("3_iydkc")
-flat = true
-icon_alignment = 1
-expand_icon = true
 
 [node name="LineNumbers" type="CheckButton" parent="ScrollContainer/GridContainer"]
 layout_mode = 2
@@ -197,14 +188,13 @@ item_count = 2
 popup/item_0/text = "Normal"
 popup/item_1/text = "Vim"
 popup/item_1/id = 1
+popup/item_1/disabled = true
 
 [connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultFont" to="." method="_on_load_default_setting_pressed" binds= ["font"]]
 [connection signal="pressed" from="ScrollContainer/GridContainer/Font" to="." method="_on_font_pressed"]
 [connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultFontSize" to="." method="_on_load_default_setting_pressed" binds= ["font_size"]]
 [connection signal="text_submitted" from="ScrollContainer/GridContainer/FontSize" to="." method="_on_font_size_text_submitted"]
-[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultAutoSave" to="." method="_on_load_default_setting_pressed" binds= ["auto_save"]]
 [connection signal="toggled" from="ScrollContainer/GridContainer/AutoSave" to="." method="_on_auto_save_toggled"]
-[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultLineNumbers" to="." method="_on_load_default_setting_pressed" binds= ["line_numbers"]]
 [connection signal="toggled" from="ScrollContainer/GridContainer/LineNumbers" to="." method="_on_line_numbers_toggled"]
 [connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultLineSpacing" to="." method="_on_load_default_setting_pressed" binds= ["line_spacing"]]
 [connection signal="text_submitted" from="ScrollContainer/GridContainer/LineSpacing" to="." method="_on_line_spacing_text_submitted"]

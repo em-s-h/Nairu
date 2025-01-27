@@ -2,14 +2,14 @@
 
 [ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/default.tres" id="1_0a6j3"]
 [ext_resource type="Script" uid="uid://c5m38p3e8yhgj" path="res://scripts/main.gd" id="1_hmnwy"]
-[ext_resource type="Script" uid="uid://fpffxcfx77cr" path="res://scripts/text_editor.gd" id="2_5mcdh"]
+[ext_resource type="Script" path="res://scripts/text_editor.gd" id="2_5mcdh"]
 [ext_resource type="PackedScene" uid="uid://jg1bxsdjljwm" path="res://scenes/notes_panel.tscn" id="2_se7sq"]
 [ext_resource type="Texture2D" uid="uid://te1pu6mvhqif" path="res://icons/down.svg" id="4_5iuao"]
 [ext_resource type="Texture2D" uid="uid://cfm4r6sv8dsxg" path="res://icons/up.svg" id="5_wnhal"]
 [ext_resource type="Texture2D" uid="uid://ycxni3wty7ph" path="res://icons/note.svg" id="7_1rffi"]
 [ext_resource type="SystemFont" uid="uid://c1tkcwtyikmm" path="res://themes/sys-font.tres" id="8_choun"]
 [ext_resource type="Texture2D" uid="uid://ltkl7fjmmxn7" path="res://icons/cog.svg" id="8_px3ne"]
-[ext_resource type="Script" uid="uid://dg8v6d4uiu0c0" path="res://scripts/settings.gd" id="9_67lvv"]
+[ext_resource type="Script" path="res://scripts/settings.gd" id="9_67lvv"]
 
 [sub_resource type="Animation" id="Animation_pnfqd"]
 length = 0.001
@@ -576,11 +576,11 @@ tracks/12/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bf6ii"]
 _data = {
-&"RESET": SubResource("Animation_pnfqd"),
-&"close_notes_panel": SubResource("Animation_jtbpp"),
-&"close_top_panel": SubResource("Animation_1i6fe"),
-&"open_notes_panel": SubResource("Animation_bo5v8"),
-&"open_top_panel": SubResource("Animation_g5rrb")
+"RESET": SubResource("Animation_pnfqd"),
+"close_notes_panel": SubResource("Animation_jtbpp"),
+"close_top_panel": SubResource("Animation_1i6fe"),
+"open_notes_panel": SubResource("Animation_bo5v8"),
+"open_top_panel": SubResource("Animation_g5rrb")
 }
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vj8vp"]
@@ -604,10 +604,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0, 1, 1, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-&"": SubResource("AnimationLibrary_bf6ii")
+"": SubResource("AnimationLibrary_bf6ii")
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
