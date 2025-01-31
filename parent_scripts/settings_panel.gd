@@ -15,7 +15,7 @@ func set_setting(key: String, val) -> void:
     var node = get_node_or_null("ScrollContainer/GridContainer/%s" % node_name)
 
     if node == null:
-        printerr("Invalid node: '%s', returning." % node_name)
+        prints("Invalid node: '%s', returning." % node_name)
         return
 
     if node is CheckButton:
@@ -26,6 +26,9 @@ func set_setting(key: String, val) -> void:
 
     elif node is OptionButton:
         node.select(val)
+
+    elif node is ColorPickerButton:
+        node.color = val
 
     elif node is Button:
         node.text = str(val)

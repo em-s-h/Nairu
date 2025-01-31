@@ -30,7 +30,7 @@ Persist="Nodes to save"
 
 [gui]
 
-theme/custom="res://themes/default.tres"
+theme/custom="res://themes/theme.tres"
 
 [input]
 

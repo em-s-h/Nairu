@@ -97,7 +97,7 @@ func open_last_edited_note() -> bool: # {{{
         var msg = "Unable to open previous note,\n"
         msg += "Error: '%s'" % ErrorDialog.expand_error_code(FileAccess.get_open_error())
 
-        notif.color = Color.RED
+        notif.type = NotificationDialog.NotificationType.ERROR
         notif.message = msg
         notif.duration = 5
 
@@ -246,6 +246,7 @@ func get_default_setting(setting_name: String): # {{{
         "note_sort"             : return DEFAULT_NOTE_SORT
         "open_previous_note"    : return DEFAULT_OPEN_PREVIOUS_NOTE
         "keep_open"             : return DEFAULT_KEEP_OPEN
+        _                       : return ERR_DOES_NOT_EXIST
 # }}}
 
 
@@ -483,9 +484,9 @@ func _on_text_editor_save_note(note_contents):  # {{{
     file.close()
 
     var notif = NotificationDialogScene.instantiate()
+    notif.type = NotificationDialog.NotificationType.SUCCESS
     notif.message = "Note saved!"
-    notif.color = Color.GREEN
-    notif.duration = 1.25
+    notif.duration = 1.20
     get_tree().root.get_node("Main").add_child(notif)
 # }}}
 

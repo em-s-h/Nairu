@@ -66,18 +66,30 @@ func _on_editor_mode_item_selected(index: int) -> void: # {{{
 
 func _on_settings_changed(key: String, val) -> void: # {{{
     var def_set = settings.get_default_setting(key, represents_node)
-    if typeof(def_set) == typeof(ERR_DOES_NOT_EXIST) && def_set == ERR_DOES_NOT_EXIST:
-        printerr("Unable to load default config, returning.")
+    if typeof(def_set) == typeof(OK) && def_set == ERR_INVALID_PARAMETER:
+        printerr("Unable to load default setting, returning.")
         printerr("setting_name: '%s', of node: '%s'" % [key, represents_node])
+        return
+
+    if typeof(def_set) == typeof(OK) && def_set == ERR_DOES_NOT_EXIST:
+        prints("Unable to find default setting, returning.")
+        prints("setting_name: '%s', of node: '%s'" % [key, represents_node])
+        return
 
     show_load_default_button(key, val != def_set)
 # }}}
 
 func _on_load_default_setting_pressed(setting_name: String) -> void: # {{{
     var def_set = settings.get_default_setting(setting_name, represents_node)
-    if typeof(def_set) == typeof(ERR_DOES_NOT_EXIST) && def_set == ERR_DOES_NOT_EXIST:
+    if typeof(def_set) == typeof(OK) && def_set == ERR_INVALID_PARAMETER:
         printerr("Unable to load default config, returning.")
         printerr("setting_name: '%s', of node: '%s'" % [setting_name, represents_node])
+        return
+
+    if typeof(def_set) == typeof(OK) && def_set == ERR_DOES_NOT_EXIST:
+        prints("Unable to find default setting, returning.")
+        prints("setting_name: '%s', of node: '%s'" % [setting_name, represents_node])
+        return
 
     show_load_default_button(setting_name, false)
     set_setting(setting_name, def_set)

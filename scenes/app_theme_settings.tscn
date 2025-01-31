@@ -1,0 +1,159 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjat3thnxa3gk"]
+
+[ext_resource type="Script" path="res://scripts/app_theme_settings.gd" id="1_04mvn"]
+
+[node name="ThemeSettings" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_04mvn")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 20.0
+offset_right = -15.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 0
+columns = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "App theme"
+
+[node name="ThemePreset" type="OptionButton" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 6
+theme_type_variation = &"SettingLineEdit"
+flat = true
+alignment = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Light"
+popup/item_0/id = 1
+popup/item_1/text = "Dark"
+popup/item_1/id = 2
+popup/item_2/text = "Custom"
+
+[node name="Label2" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Accent color"
+
+[node name="ThemeAccent" type="ColorPickerButton" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+icon_alignment = 2
+expand_icon = true
+edit_alpha = false
+
+[node name="Label8" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Font color"
+
+[node name="ThemeFontColor" type="ColorPickerButton" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+icon_alignment = 2
+expand_icon = true
+edit_alpha = false
+
+[node name="Label3" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Background color"
+
+[node name="ThemeBackground" type="ColorPickerButton" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+icon_alignment = 2
+expand_icon = true
+edit_alpha = false
+
+[node name="Label4" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Complementary color"
+
+[node name="ThemeComplementary" type="ColorPickerButton" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+icon_alignment = 2
+expand_icon = true
+edit_alpha = false
+
+[node name="Label5" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Success color"
+
+[node name="ThemeSuccess" type="ColorPickerButton" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+icon_alignment = 2
+expand_icon = true
+edit_alpha = false
+
+[node name="Label6" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Warning color"
+
+[node name="ThemeWarning" type="ColorPickerButton" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+icon_alignment = 2
+expand_icon = true
+edit_alpha = false
+
+[node name="Label7" type="Label" parent="ScrollContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
+text = "Error color"
+
+[node name="ThemeError" type="ColorPickerButton" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 6
+icon_alignment = 2
+expand_icon = true
+edit_alpha = false
+
+[connection signal="item_selected" from="ScrollContainer/GridContainer/ThemePreset" to="." method="_on_app_theme_item_selected"]

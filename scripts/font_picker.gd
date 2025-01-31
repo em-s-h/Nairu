@@ -95,9 +95,9 @@ func _on_line_edit_text_submited(new_text: String) -> void: # {{{
         var notif = NotificationDialogScene.instantiate()
         var msg = "Font '%s' not found"
 
-        notif.color = Color.RED
+        notif.type = NotificationDialog.NotificationType.ERROR
         notif.message = msg
-        notif.duration = 4
+        notif.duration = 5
 
         get_tree().root.get_node("Main").add_child(notif)
 # }}}

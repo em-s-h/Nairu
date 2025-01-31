@@ -86,6 +86,7 @@ func get_default_setting(setting_name: String): # {{{
         "line_spacing"  : return DEFAULT_LINE_SPACING
         "font_size"     : return DEFAULT_FONT_SIZE
         "font"          : return DEFAULT_FONT
+        _               : return ERR_DOES_NOT_EXIST
 # }}}
 
 

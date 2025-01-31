@@ -3,17 +3,10 @@ extends Node
 
 
 const CONFIG_PATH = "user://config.cfg"
-const DEFAULT_EDITOR_THEME := EditorThemes.DEFAULT
-
-enum EditorThemes {
-    DEFAULT,
-    DARK,
-}
 
 var SettingsWindowScene = preload("res://scenes/settings_window.tscn")
 var settings_window: SettingsWindow
 
-var app_theme := DEFAULT_EDITOR_THEME
 var config: ConfigFile
 
 
@@ -55,7 +48,7 @@ func save_settings(): # {{{
     var save_nodes = get_tree().get_nodes_in_group("Persist")
     for node in save_nodes:
         if !node.has_method("get_settings"):
-            printerr("Persistent node '%s' doesn't have 'get_settings' method, skipping." % node.name)
+            prints("Persistent node '%s' doesn't have 'get_settings' method, skipping." % node.name)
             continue
 
         var settings = node.call("get_settings")
@@ -84,7 +77,7 @@ func load_settings(): # {{{
     for scene_path in config.get_sections():
         var node = get_node_or_null(scene_path)
         if node == null:
-            printerr("Invalid node path: '%s', skipping." % scene_path)
+            prints("Invalid node path: '%s', skipping." % scene_path)
             continue
 
         for key in config.get_section_keys(scene_path):
@@ -108,22 +101,7 @@ func _on_notes_panel_save_note_dates(): # {{{
     config.save(CONFIG_PATH)
 # }}}
 
-
-func get_settings(): # {{{
-    return {
-        "app_theme" : app_theme,
-    }
-# }}}
-
-func reload_settings(): # {{{
-    pass
-# }}}
-
 func get_default_setting(setting_name: String, from_node: String): # {{{
-    if from_node == "Settings":
-        match setting_name:
-            "app_theme" : return DEFAULT_EDITOR_THEME
-
     var p_nodes = get_tree().get_nodes_in_group("Persist")
     for node in p_nodes:
         if node is Settings:
@@ -136,9 +114,8 @@ func get_default_setting(setting_name: String, from_node: String): # {{{
         if node.name == from_node:
             return node.call("get_default_setting", setting_name)
 
-    return ERR_DOES_NOT_EXIST
+    return ERR_INVALID_PARAMETER
 # }}}
-
 
 func _on_settings_panel_setting_changed(key: String, val): # {{{
     var err = config.load(CONFIG_PATH)

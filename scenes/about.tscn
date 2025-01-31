@@ -39,3 +39,31 @@ text = "Note editor & manager"
 layout_mode = 2
 size_flags_vertical = 10
 text = "Created by Emilly M.S.H"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Dark theme credits: "
+
+[node name="LinkButton" type="LinkButton" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "onedark.nvim"
+underline = 1
+uri = "https://github.com/navarasu/onedark.nvim"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Icon credits: "
+
+[node name="LinkButton" type="LinkButton" parent="ScrollContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "nerdfonts"
+underline = 1
+uri = "https://www.nerdfonts.com/#home"

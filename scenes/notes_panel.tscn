@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://jg1bxsdjljwm"]
 
-[ext_resource type="Script" uid="uid://cxjmlee5m7p0w" path="res://scripts/notes_panel.gd" id="1_bq6l0"]
-[ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/default.tres" id="1_ucgnq"]
+[ext_resource type="Script" path="res://scripts/notes_panel.gd" id="1_bq6l0"]
+[ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/theme.tres" id="1_ucgnq"]
 
 [sub_resource type="Animation" id="Animation_5tbv8"]
 length = 0.001

@@ -45,9 +45,9 @@ func create_file_picker(callback_func: Callable, override := false) -> FileDialo
             var d = NotificationDialogScene.instantiate()
             var msg = "Invalid directory path: '%s',\n" % dir
 
-            d.duration = 5
-            d.color = Color.RED
+            d.type = NotificationDialog.NotificationType.ERROR
             d.message = msg
+            d.duration = 5
             get_tree().root.get_node("Main").add_child(d)
 
     f.file_mode = FileDialog.FILE_MODE_OPEN_DIR
@@ -91,9 +91,9 @@ func _on_note_directory_line_edit_submitted(new_text: String) -> void: # {{{
     var d = NotificationDialogScene.instantiate()
     var msg = "Invalid directory path: '%s',\n" % new_text
 
-    d.duration = 5
-    d.color = Color.RED
+    d.type = NotificationDialog.NotificationType.ERROR
     d.message = msg
+    d.duration = 5
     get_tree().root.get_node("Main").add_child(d)
 # }}}
 
@@ -107,9 +107,9 @@ func _on_backup_directory_line_edit_submitted(new_text: String) -> void: # {{{
     var d = NotificationDialogScene.instantiate()
     var msg = "Invalid directory path: '%s',\n" % new_text
 
-    d.duration = 5
-    d.color = Color.RED
+    d.type = NotificationDialog.NotificationType.ERROR
     d.message = msg
+    d.duration = 5
     get_tree().root.get_node("Main").add_child(d)
 # }}}
 
@@ -135,6 +135,7 @@ func _on_settings_changed(key: String, val) -> void: # {{{
     if typeof(def_set) == typeof(ERR_DOES_NOT_EXIST) and def_set == ERR_DOES_NOT_EXIST:
         printerr("Unable to load default config, returning.")
         printerr("setting_name: '%s', of node: '%s'" % [key, represents_node])
+        return
 
     if "user://" in str(def_set):
         def_set = ProjectSettings.globalize_path(def_set)
@@ -146,6 +147,7 @@ func _on_load_default_setting_pressed(setting_name: String) -> void: # {{{
     if typeof(def_set) == typeof(ERR_DOES_NOT_EXIST) && def_set == ERR_DOES_NOT_EXIST:
         printerr("Unable to load default config, returning.")
         printerr("setting_name: '%s', of node: '%s'" % [setting_name, represents_node])
+        return
 
     show_load_default_button(setting_name, false)
     set_setting(setting_name, def_set)
