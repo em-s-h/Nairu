@@ -53,13 +53,13 @@ func reload_settings(): # {{{
         theme_font_color    = LIGHT_THEME_FONT_COLOR
 
     if theme_preset == ThemePresets.DARK:
-        theme_background    = Color.hex(0x323641)
-        theme_complementary = Color.hex(0xa0a8b7)
-        theme_success       = Color.hex(0x8ebd6b)
-        theme_warning       = Color.hex(0xe2b86b)
-        theme_error         = Color.hex(0xe55561)
-        theme_accent        = Color.hex(0x48b0bd)
-        theme_font_color    = Color.hex(0xa0a8b7)
+        theme_background    = Color.hex(0x323641ff)
+        theme_complementary = Color.hex(0xa0a8b7ff)
+        theme_success       = Color.hex(0x8ebd6bff)
+        theme_warning       = Color.hex(0xe2b86bff)
+        theme_error         = Color.hex(0xe55561ff)
+        theme_accent        = Color.hex(0x48b0bdff)
+        theme_font_color    = Color.hex(0xa0a8b7ff)
 
     for type in theme.get_type_list():
         for p_name in theme.get_stylebox_list(type):
@@ -81,40 +81,45 @@ func reload_settings(): # {{{
                 theme.set_stylebox(p_name, type, s)
 
         for p_name in theme.get_color_list(type):
-            if "font" in p_name or "caret" in p_name:
-                var a = theme.get_color(p_name, type).a
-                var c = theme_font_color
-                c.a = a
+            if "font" in p_name or "caret" in p_name or "icon":
+                var alp = theme.get_color(p_name, type).a
+                var col = theme_font_color
+                col.a = alp
 
-                theme.set_color(p_name, type, c)
+                theme.set_color(p_name, type, col)
 
-        if type == "CodeEdit":
-            var a =  theme.get_color("background_color", type).a
-            var c = theme_background
+    # Fix edge cases
+    # Code edit
+    var a =  theme.get_color("background_color", "CodeEdit").a
+    var c = theme_background
 
-            c.a = a
-            theme.set_color("background_color", type, c)
+    c.a = a
+    theme.set_color("background_color", "CodeEdit", c)
 
-            a = theme.get_color("font_selected_color", type).a
-            c.a = a
-            theme.set_color("font_selected_color", type, c)
+    a = theme.get_color("font_selected_color", "CodeEdit").a
+    c.a = a
+    theme.set_color("font_selected_color", "CodeEdit", c)
 
-            a = theme.get_color("selection_color", type).a
-            c = theme_font_color
-            c.a = a
-            theme.set_color("selection_color", type, c)
+    a = theme.get_color("selection_color", "CodeEdit").a
+    c = theme_font_color
+    c.a = a
+    theme.set_color("selection_color", "CodeEdit", c)
 
-        if type == "LinkButton":
-            var c = Color.CORNFLOWER_BLUE
-            theme.set_color("font_color", type, c)
+    a = theme.get_color("line_number_color", "CodeEdit").a
+    c.a = a
+    theme.set_color("line_number_color", "CodeEdit", c)
 
-            c = Color.DARK_SLATE_BLUE
-            theme.set_color("font_focus_color", type, c)
-            theme.set_color("font_hover_pressed_color", type, c)
+    # Link button
+    c = Color.CORNFLOWER_BLUE
+    theme.set_color("font_color", "LinkButton", c)
 
-            c = Color.SLATE_BLUE
-            theme.set_color("font_hover_color", type, c)
-            theme.set_color("font_pressed_color", type, c)
+    c = Color.DARK_SLATE_BLUE
+    theme.set_color("font_focus_color", "LinkButton", c)
+    theme.set_color("font_hover_pressed_color", "LinkButton", c)
+
+    c = Color.SLATE_BLUE
+    theme.set_color("font_hover_color", "LinkButton", c)
+    theme.set_color("font_pressed_color", "LinkButton", c)
 # }}}
 
 func get_default_setting(setting_name: String): # {{{

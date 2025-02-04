@@ -1,14 +1,14 @@
 [gd_scene load_steps=20 format=3 uid="uid://chlrgnqu5m6em"]
 
 [ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/theme.tres" id="1_8m5ng"]
-[ext_resource type="Script" uid="uid://c5m38p3e8yhgj" path="res://scripts/main.gd" id="1_hmnwy"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_hmnwy"]
 [ext_resource type="Script" path="res://scripts/text_editor.gd" id="2_5mcdh"]
 [ext_resource type="PackedScene" uid="uid://jg1bxsdjljwm" path="res://scenes/notes_panel.tscn" id="2_se7sq"]
 [ext_resource type="Texture2D" uid="uid://te1pu6mvhqif" path="res://icons/down.svg" id="4_5iuao"]
 [ext_resource type="Texture2D" uid="uid://cfm4r6sv8dsxg" path="res://icons/up.svg" id="5_wnhal"]
 [ext_resource type="Texture2D" uid="uid://ycxni3wty7ph" path="res://icons/note.svg" id="7_1rffi"]
 [ext_resource type="SystemFont" uid="uid://c1tkcwtyikmm" path="res://themes/sys-font.tres" id="8_choun"]
-[ext_resource type="Texture2D" uid="uid://ltkl7fjmmxn7" path="res://icons/cog.svg" id="8_px3ne"]
+[ext_resource type="Texture2D" uid="uid://ltkl7fjmmxn7" path="res://icons/settings.svg" id="8_px3ne"]
 [ext_resource type="Script" path="res://scripts/settings.gd" id="9_67lvv"]
 [ext_resource type="Script" path="res://scripts/app_theme.gd" id="11_ou2e1"]
 
@@ -36,7 +36,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_wnhal")]
+"values": [ExtResource("4_5iuao")]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -250,7 +250,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.35),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [null, ExtResource("5_wnhal")]
+"values": [null, ExtResource("4_5iuao")]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -440,7 +440,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.35),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [null, ExtResource("4_5iuao")]
+"values": [null, ExtResource("5_wnhal")]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -588,8 +588,7 @@ _data = {
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7w5xn"]
 
-[node name="Main" type="Control"]
-layout_mode = 3
+[node name="Main" type="Panel"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -597,14 +596,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_8m5ng")
 script = ExtResource("1_hmnwy")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -644,9 +635,9 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 15.0
+offset_left = 12.0
 offset_top = -19.0
-offset_right = 53.0
+offset_right = 50.0
 offset_bottom = 19.0
 grow_vertical = 2
 size_flags_horizontal = 2
@@ -665,9 +656,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -53.0
+offset_left = -50.0
 offset_top = -19.0
-offset_right = -15.0
+offset_right = -12.0
 offset_bottom = 19.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -685,7 +676,7 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_vertical = 0
 theme_type_variation = &"TopPanelButton"
-icon = ExtResource("5_wnhal")
+icon = ExtResource("4_5iuao")
 icon_alignment = 1
 expand_icon = true
 
@@ -698,14 +689,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -10.0
+offset_left = -9.0
 offset_top = -10.0
-offset_right = 8.0
+offset_right = 9.0
 offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(9, 9)
-texture = ExtResource("5_wnhal")
+texture = ExtResource("4_5iuao")
 expand_mode = 1
 stretch_mode = 4
 

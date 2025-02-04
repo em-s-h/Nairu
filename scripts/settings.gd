@@ -20,7 +20,7 @@ func open_settings(): # {{{
 
     settings_window.close_requested.connect(_on_settings_window_close_requested)
 
-    var tab_cont = settings_window.get_node("TabContainer")
+    var tab_cont = settings_window.get_node("Panel/TabContainer")
     for c in tab_cont.get_children():
         if c is SettingsPanel:
             c.setting_changed.connect(_on_settings_panel_setting_changed)
@@ -40,7 +40,14 @@ func open_settings(): # {{{
         return
 
     settings_window.reload_settings(config)
+    settings_window.name = "SettingsWindow"
     settings_window.show()
+# }}}
+
+func reload_settings_window() -> void: # {{{
+    settings_window.queue_free()
+    await get_tree().create_timer(0.1).timeout
+    open_settings()
 # }}}
 
 func save_settings(): # {{{
@@ -125,7 +132,7 @@ func _on_settings_panel_setting_changed(key: String, val): # {{{
         msg += "Error: '%s'" % ErrorDialog.expand_error_code(err)
 
         d.dialog_text = msg
-        add_child(d)
+        $SettingsWindow.add_child(d)
         return
 
     var sect

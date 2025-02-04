@@ -1,5 +1,5 @@
 class_name Main
-extends Control
+extends Panel
 
 
 @onready var settings: Settings = $Settings

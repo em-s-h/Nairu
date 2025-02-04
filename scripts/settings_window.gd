@@ -17,7 +17,7 @@ func _ready() -> void:
 
 func reload_settings(conf: ConfigFile):
     # {{{
-    for c in $TabContainer.get_children():
+    for c in $Panel/TabContainer.get_children():
         if c is SettingsPanel:
             var node_name = c.represents_node
             var sect: String = ""
@@ -37,7 +37,7 @@ func reload_settings(conf: ConfigFile):
 
 func _on_tab_container_tab_changed(tab: int) -> void:
     # {{{
-    var tab_c = $TabContainer.get_tab_control(tab)
+    var tab_c = $Panel/TabContainer.get_tab_control(tab)
     var s = Vector2i(size.x, int(tab_c.custom_minimum_size.y) + BOTTOM_PADDING)
     size = s
 
