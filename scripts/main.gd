@@ -6,7 +6,7 @@ extends Panel
 @onready var text_editor: TextEditor = $HBoxContainer/VBoxContainer/TextEditor
 @onready var notes_panel: NotesPanel = $HBoxContainer/NotesPanel
 
-@onready var current_window_size := DisplayServer.window_get_size() as Vector2
+@onready var current_window_size := get_window().size as Vector2
 
 var top_panel_size
 var notes_panel_size
@@ -19,11 +19,13 @@ var open_notes_panel := false
 
 var top_panel_open := false
 var open_top_panel := false
+var is_fullscreen := false
 
 
-func _ready() -> void:
-    # {{{
+func _ready() -> void: # {{{
     get_tree().set_auto_accept_quit(false)
+    get_window().size_changed.connect(_on_window_size_changed)
+
     top_panel_size = $HBoxContainer/VBoxContainer/TopPanel.custom_minimum_size
     notes_panel_size = notes_panel.custom_minimum_size
 
@@ -49,8 +51,7 @@ func _ready() -> void:
         notes_panel.create_notes_backup()
 # }}}
 
-func _notification(what: int) -> void:
-    # {{{
+func _notification(what: int) -> void: # {{{
     if what != NOTIFICATION_WM_CLOSE_REQUEST:
         return
 
@@ -94,8 +95,7 @@ func _notification(what: int) -> void:
     get_tree().quit()
 # }}}
 
-func _process(delta: float) -> void:
-    # {{{
+func _process(delta: float) -> void: # {{{
     if open_top_panel and !top_panel_open:
         $AnimationPlayer.play("open_top_panel")
         resize_window(Vector2.UP, top_panel_size.y, delta)
@@ -115,17 +115,21 @@ func _process(delta: float) -> void:
         notes_panel.close_panel()
 # }}}
 
-func change_title(new_title: String) -> void:
-    # {{{
+
+func change_title(new_title: String) -> void: # {{{
     if new_title.is_empty():
         new_title = "Nairu"
 
-    DisplayServer.window_set_title(new_title)
+    get_window().title = new_title
     title = new_title
 # }}}
 
-func resize_window(direction, quant, delta):
-    # {{{
+func resize_window(direction, quant, delta): # {{{
+    var mode = get_window().mode
+    if mode == Window.MODE_FULLSCREEN or mode == Window.MODE_EXCLUSIVE_FULLSCREEN \
+       or mode == Window.MODE_MAXIMIZED:
+        return
+
     var positive = quant > 0
 
     match direction:
@@ -134,8 +138,12 @@ func resize_window(direction, quant, delta):
 
     var weight = $AnimationPlayer.current_animation_position / $AnimationPlayer.current_animation_length
     var target_win_size = current_window_size + quant
-    weight += delta * 3
 
+    var screen_size = DisplayServer.screen_get_size()
+    if target_win_size.x > screen_size.x or target_win_size.y > screen_size.y:
+        return
+
+    weight += delta * 3
     var min_size
     var max_size
 
@@ -146,35 +154,46 @@ func resize_window(direction, quant, delta):
         max_size = current_window_size
         min_size = target_win_size
 
-    if target_win_size as Vector2i != DisplayServer.window_get_size():
+    if target_win_size as Vector2i != get_window().size:
         var new_win_size = current_window_size.lerp(target_win_size, weight)
         new_win_size = clamp(new_win_size, min_size, max_size)
 
-        DisplayServer.window_set_size(new_win_size)
+        get_window().size = new_win_size
+# }}}
+
+func _on_window_size_changed() -> void: # {{{
+    var mode = get_window().mode
+
+    # Update window size right after leaving fullscreen
+    if is_fullscreen and mode == Window.MODE_WINDOWED:
+        current_window_size = get_window().size
+
+    is_fullscreen = mode == Window.MODE_MAXIMIZED or mode == Window.MODE_FULLSCREEN \
+                    or mode == Window.MODE_EXCLUSIVE_FULLSCREEN
+
+    get_viewport().gui_embed_subwindows = is_fullscreen
 # }}}
 
 
-func _on_top_panel_button_pressed() -> void:
-    # {{{
+func _on_top_panel_button_pressed() -> void: # {{{
     open_top_panel = !open_top_panel
     $HBoxContainer/VBoxContainer/TopPanelButton.release_focus()
+    _update_current_window_size()
 # }}}
 
-func _on_notes_panel_button_pressed() -> void:
-    # {{{
+func _on_notes_panel_button_pressed() -> void: # {{{
     open_notes_panel = !open_notes_panel
     $HBoxContainer/VBoxContainer/TopPanel/NotesPanelButton.release_focus()
+    _update_current_window_size()
 # }}}
 
-func _on_settings_window_button_pressed() -> void:
-    # {{{
+func _on_settings_window_button_pressed() -> void: # {{{
     $HBoxContainer/VBoxContainer/TopPanel/SettingsWindowButton.release_focus()
     settings.open_settings()
 # }}}
 
 
-func _on_animation_player_animation_finished(anim_name: StringName) -> void:
-    # {{{
+func _on_animation_player_animation_finished(anim_name: StringName) -> void: # {{{
     match anim_name:
         "open_top_panel":
             top_panel_open = true
@@ -191,7 +210,6 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
     _update_current_window_size()
 # }}}
 
-func _update_current_window_size():
-    # {{{
-    current_window_size = DisplayServer.window_get_size()
+func _update_current_window_size(): # {{{
+    current_window_size = get_window().size
 # }}}

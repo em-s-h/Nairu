@@ -18,6 +18,7 @@ var selected_font := "":
 
 
 func _ready() -> void: # {{{
+    close_requested.connect(_on_cancel_pressed)
     var os_name = OS.get_name().to_lower()
 
     match os_name:
