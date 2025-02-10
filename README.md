@@ -8,6 +8,12 @@ https://github.com/user-attachments/assets/2da8276e-2b3c-401b-98ea-91321a81c893
 
 
 
+## Features
+
+[x] Basics (create, edit, save notes)
+[] Vi mode
+[] More keyboard shortcuts
+
 ## Download
 
 You can download a binary from the latest [release](https://github.com/em-s-h/Nairu/releases).
