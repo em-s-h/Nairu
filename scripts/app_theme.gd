@@ -2,6 +2,9 @@ class_name AppTheme
 extends Node
 
 
+const THEME_PATH := "res://themes/theme.tres"
+const FONT_PATH := "res://themes/sys-font.tres"
+
 const DEFAULT_THEME_PRESET      := ThemePresets.LIGHT
 const LIGHT_THEME_BACKGROUND    := Color.WHITE
 const LIGHT_THEME_COMPLEMENTARY := Color.BLACK
@@ -26,7 +29,7 @@ var theme_accent        := LIGHT_THEME_ACCENT
 var theme_font_color    := LIGHT_THEME_FONT_COLOR
 
 var theme_preset := DEFAULT_THEME_PRESET
-@onready var theme: Theme = preload("res://themes/theme.tres")
+@onready var theme: Theme = preload(THEME_PATH)
 
 
 func get_settings(): # {{{

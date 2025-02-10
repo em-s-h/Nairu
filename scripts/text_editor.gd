@@ -69,7 +69,7 @@ func reload_settings(): # {{{
     add_theme_constant_override("line_spacing", line_spacing)
     add_theme_font_size_override("font_size", font_size)
 
-    var f: SystemFont = load("res://themes/sys-font.tres")
+    var f: SystemFont = load(AppTheme.FONT_PATH)
     var f_names = PackedStringArray([str(font)])
     f.font_names = f_names
 

@@ -73,7 +73,7 @@ func _notification(what: int) -> void: # {{{
         d.confirmed.connect(conf)
 
         d.title = "Changes not saved!"
-        d.theme = load("res://themes/default.tres")
+        d.theme = load(AppTheme.THEME_PATH)
         for c in d.get_children(true):
             if c is Panel: c.remove_theme_stylebox_override("panel")
             if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

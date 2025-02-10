@@ -284,20 +284,19 @@ func format_date(date: String, from: DateFormat, to: DateFormat) -> String: # {{
 # }}}
 
 
-## `from` is used when saving without any note being open
-func _on_create_pressed(from: String = "") -> void: # {{{
+func _on_create_pressed(contents: String = "") -> void: # {{{
     prints("Creating new note...")
     var note = str(note_directory, "/", "new_note")
     var note_id = 0
 
     while FileAccess.file_exists(str(note, ".txt")):
         note_id += 1
-        note = str(note_directory, "new_note", note_id)
+        note = str(note_directory, "/new_note", note_id)
 
     current_note = str(note, ".txt")
 
     var file = FileAccess.open(current_note, FileAccess.WRITE)
-    file.store_string(from)
+    file.store_string(contents)
     file.close()
 
     var note_button = NoteButtonScene.instantiate()
@@ -313,6 +312,8 @@ func _on_create_pressed(from: String = "") -> void: # {{{
     note_button.open_note.connect(_on_note_button_open_note)
     sort_notes()
     save_note_dates.emit()
+
+    _on_note_button_open_note(note.get_file())
 # }}}
 
 func _on_sort_item_selected(index: int) -> void: # {{{
@@ -380,7 +381,7 @@ func _on_note_button_open_note(note_name): # {{{
                 d.queue_free()
 
         d.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-        d.theme = load("res://themes/default.tres")
+        d.theme = load(AppTheme.THEME_PATH)
 
         d.title = "Unsaved changes!"
         d.ok_button_text = "Save"
@@ -434,11 +435,26 @@ func _on_note_button_delete_note(note_name): # {{{
         return
 
     for n in notes_container.get_children():
-        if n.note_name == note_name:
-            n.queue_free()
-            note_deleted.emit(path == current_note)
-            note_changed.emit("")
+        if n.note_name != note_name:
+            continue
+
+        var id = n.get_index()
+        notes_container.remove_child(n)
+        n.queue_free()
+
+        note_deleted.emit(path == current_note)
+        note_changed.emit("")
+
+        if path != current_note:
             return
+
+        current_note = ""
+        var c = notes_container.get_child(id - 1)
+        if c == null:
+            return
+
+        _on_note_button_open_note(c.note_name)
+        return
 # }}}
 
 
@@ -452,7 +468,7 @@ func _on_text_editor_save_note(note_contents):  # {{{
             text_editor.save()
 
         d.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-        d.theme = load("res://themes/default.tres")
+        d.theme = load(AppTheme.THEME_PATH)
 
         d.title = "Unsaved changes!"
         d.ok_button_text = "Save"

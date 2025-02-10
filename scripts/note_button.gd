@@ -152,7 +152,7 @@ func _on_note_button_settings_popup_delete() -> void: # {{{
     var confirm_dialog = ConfirmationDialog.new()
 
     confirm_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-    confirm_dialog.theme = load("res://themes/default.tres")
+    confirm_dialog.theme = load(AppTheme.THEME_PATH)
 
     confirm_dialog.title = "Confirm"
     confirm_dialog.dialog_text = "Delete note '%s'?" % note_name
