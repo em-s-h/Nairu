@@ -188,7 +188,6 @@ item_count = 2
 popup/item_0/text = "Normal"
 popup/item_1/text = "Vim"
 popup/item_1/id = 1
-popup/item_1/disabled = true
 
 [connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultFont" to="." method="_on_load_default_setting_pressed" binds= ["font"]]
 [connection signal="pressed" from="ScrollContainer/GridContainer/Font" to="." method="_on_font_pressed"]

@@ -32,7 +32,7 @@ var theme_preset := DEFAULT_THEME_PRESET
 @onready var theme: Theme = preload(THEME_PATH)
 
 
-func get_settings(): # {{{
+func get_settings(): 
     return {
         "theme_preset"          : theme_preset,
         "theme_background"      : theme_background,
@@ -43,9 +43,9 @@ func get_settings(): # {{{
         "theme_accent"          : theme_accent,
         "theme_font_color"      : theme_font_color,
     }
-# }}}
 
-func reload_settings(): # {{{
+
+func reload_settings(): 
     if theme_preset == ThemePresets.LIGHT:
         theme_background    = LIGHT_THEME_BACKGROUND
         theme_complementary = LIGHT_THEME_COMPLEMENTARY
@@ -123,10 +123,10 @@ func reload_settings(): # {{{
     c = Color.SLATE_BLUE
     theme.set_color("font_hover_color", "LinkButton", c)
     theme.set_color("font_pressed_color", "LinkButton", c)
-# }}}
 
-func get_default_setting(setting_name: String): # {{{
+
+func get_default_setting(setting_name: String): 
     match setting_name:
         "theme_preset"  : return DEFAULT_THEME_PRESET
         _               : return ERR_DOES_NOT_EXIST
-# }}}
+

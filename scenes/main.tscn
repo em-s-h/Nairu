@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://chlrgnqu5m6em"]
+[gd_scene load_steps=21 format=3 uid="uid://chlrgnqu5m6em"]
 
 [ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/theme.tres" id="1_8m5ng"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_hmnwy"]
@@ -10,6 +10,7 @@
 [ext_resource type="SystemFont" uid="uid://c1tkcwtyikmm" path="res://themes/sys-font.tres" id="8_choun"]
 [ext_resource type="Texture2D" uid="uid://ltkl7fjmmxn7" path="res://icons/settings.svg" id="8_px3ne"]
 [ext_resource type="Script" path="res://scripts/settings.gd" id="9_67lvv"]
+[ext_resource type="Script" path="res://scripts/command_line.gd" id="10_8sc7k"]
 [ext_resource type="Script" path="res://scripts/app_theme.gd" id="11_ou2e1"]
 
 [sub_resource type="Animation" id="Animation_pnfqd"]
@@ -594,6 +595,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource("1_8m5ng")
 script = ExtResource("1_hmnwy")
 
@@ -701,10 +704,11 @@ expand_mode = 1
 stretch_mode = 4
 
 [node name="TextEditor" type="CodeEdit" parent="HBoxContainer/VBoxContainer" groups=["Persist"]]
-custom_minimum_size = Vector2(720, 800)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("8_choun")
+deselect_on_focus_loss_enabled = false
+caret_type = 1
 caret_draw_when_editable_disabled = true
 caret_multiple = false
 gutters_draw_line_numbers = true
@@ -713,6 +717,28 @@ script = ExtResource("2_5mcdh")
 
 [node name="Delay" type="Timer" parent="HBoxContainer/VBoxContainer/TextEditor"]
 one_shot = true
+
+[node name="BottomPanel" type="Panel" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_vertical = 8
+theme_type_variation = &"BottomPanel"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/BottomPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CommandLine" type="LineEdit" parent="HBoxContainer/VBoxContainer/BottomPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+flat = true
+caret_blink = true
+script = ExtResource("10_8sc7k")
 
 [node name="Settings" type="Node" parent="."]
 script = ExtResource("9_67lvv")
@@ -726,3 +752,5 @@ script = ExtResource("11_ou2e1")
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/TopPanelButton" to="." method="_on_top_panel_button_pressed"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/TextEditor" to="HBoxContainer/VBoxContainer/TextEditor" method="_on_text_changed"]
 [connection signal="timeout" from="HBoxContainer/VBoxContainer/TextEditor/Delay" to="HBoxContainer/VBoxContainer/TextEditor" method="_on_delay_timeout"]
+[connection signal="focus_exited" from="HBoxContainer/VBoxContainer/BottomPanel/HBoxContainer/CommandLine" to="HBoxContainer/VBoxContainer/BottomPanel/HBoxContainer/CommandLine" method="_on_focus_exited"]
+[connection signal="text_changed" from="HBoxContainer/VBoxContainer/BottomPanel/HBoxContainer/CommandLine" to="HBoxContainer/VBoxContainer/BottomPanel/HBoxContainer/CommandLine" method="_on_text_changed"]

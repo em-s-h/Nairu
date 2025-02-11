@@ -10,7 +10,7 @@ const DEFAULT_OPEN_PREVIOUS_NOTE    := true
 const DEFAULT_KEEP_OPEN             := true
 const DEFAULT_NOTE_SORT             := NoteSort.DATE_ASCENDING
 
-# Enums {{{
+# Enums
 enum DateFormat {
 YEAR_MONTH_DAY,
 DAY_MONTH_YEAR,
@@ -28,7 +28,7 @@ OFF,
 ON_APP_OPEN,
 ON_APP_CLOSE,
 }
-# }}}
+
 
 signal edit_note(contents: String)
 signal save_note_dates()
@@ -55,7 +55,7 @@ var text_editor: TextEditor
 @onready var notes_container = $VBoxContainer/Notes/ScrollContainer/VBoxContainer
 
 
-func _ready() -> void: # {{{
+func _ready() -> void: 
     create_note_dirs()
     var dir = DirAccess.open(note_directory)
     if dir != null:
@@ -81,13 +81,13 @@ func _ready() -> void: # {{{
     add_child(d)
 
     note_directory = DEFAULT_NOTE_DIRECTORY
-# }}}
+
 
 ## Open the last edited note.
 ##
 ## Open the last note being edited before the app was closed,
 ## if no note was being edited returns false.
-func open_last_edited_note() -> bool: # {{{
+func open_last_edited_note() -> bool: 
     if previous_note == "":
         return false
 
@@ -109,9 +109,9 @@ func open_last_edited_note() -> bool: # {{{
     current_note = previous_note
 
     return true
-# }}}
 
-func create_notes_backup() -> void: # {{{
+
+func create_notes_backup() -> void: 
     create_note_dirs()
     var warn = func(mesg: String):
         var d = ErrorDialog.new()
@@ -183,9 +183,9 @@ func create_notes_backup() -> void: # {{{
         return
 
     ziper.close()
-# }}}
 
-func create_note_dirs() -> void: # {{{
+
+func create_note_dirs() -> void: 
     var dir = DirAccess.open("user://")
 
     if !dir.dir_exists("./backups"):
@@ -193,9 +193,9 @@ func create_note_dirs() -> void: # {{{
 
     if !dir.dir_exists("./notes"):
         dir.make_dir("./notes")
-# }}}
 
-func sort_notes(): # {{{
+
+func sort_notes(): 
     var notes = []
     for n in notes_container.get_children():
         notes.append(n)
@@ -216,10 +216,10 @@ func sort_notes(): # {{{
 
     for n in notes:
         notes_container.add_child(n)
-# }}}
 
 
-func get_settings(): # {{{
+
+func get_settings(): 
     return {
         "backup_directory" : backup_directory,
         "note_directory" : note_directory,
@@ -230,14 +230,14 @@ func get_settings(): # {{{
         "note_sort" : note_sort,
         "keep_open" : keep_open,
     }
-# }}}
 
-func reload_settings(): # {{{
+
+func reload_settings(): 
     $VBoxContainer/Opts/VBoxContainer/Sort.select(note_sort as int)
     sort_notes()
-# }}}
 
-func get_default_setting(setting_name: String): # {{{
+
+func get_default_setting(setting_name: String): 
     match setting_name:
         "backup_directory"      : return DEFAULT_NOTE_BACKUP_DIRECTORY
         "note_directory"        : return DEFAULT_NOTE_DIRECTORY
@@ -247,14 +247,14 @@ func get_default_setting(setting_name: String): # {{{
         "open_previous_note"    : return DEFAULT_OPEN_PREVIOUS_NOTE
         "keep_open"             : return DEFAULT_KEEP_OPEN
         _                       : return ERR_DOES_NOT_EXIST
-# }}}
+
 
 
 func make_note_path(n_name: String) -> String: return str(note_directory, "/", n_name, ".txt")
 func open_panel(): $AnimationPlayer.play("open_panel")
 func close_panel(): $AnimationPlayer.play_backwards("open_panel")
 
-func format_date(date: String, from: DateFormat, to: DateFormat) -> String: # {{{
+func format_date(date: String, from: DateFormat, to: DateFormat) -> String: 
     var dt: Array
     if "-" in date:
         dt = date.split("-")
@@ -281,10 +281,10 @@ func format_date(date: String, from: DateFormat, to: DateFormat) -> String: # {{
     out += "," + time
 
     return out
-# }}}
 
 
-func _on_create_pressed(contents: String = "") -> void: # {{{
+
+func _on_create_pressed(contents: String = "") -> void: 
     prints("Creating new note...")
     var note = str(note_directory, "/", "new_note")
     var note_id = 0
@@ -314,15 +314,18 @@ func _on_create_pressed(contents: String = "") -> void: # {{{
     save_note_dates.emit()
 
     _on_note_button_open_note(note.get_file())
-# }}}
 
-func _on_sort_item_selected(index: int) -> void: # {{{
+
+func _on_sort_item_selected(index: int) -> void: 
     note_sort = $VBoxContainer/Opts/VBoxContainer/Sort.get_item_id(index) as NoteSort
     sort_notes()
-# }}}
 
 
-func _on_note_button_rename_note(old_name, new_name: String): # {{{
+
+func _on_note_button_rename_note(old_name, new_name: String): 
+    if new_name.is_empty():
+        return
+
     new_name = new_name.validate_filename()
     var tmp_name = new_name
 
@@ -361,9 +364,12 @@ func _on_note_button_rename_note(old_name, new_name: String): # {{{
         current_note = make_note_path(new_name)
         note_changed.emit(new_name)
     sort_notes()
-# }}}
 
-func _on_note_button_open_note(note_name): # {{{
+
+func _on_note_button_open_note(note_name): 
+    if note_name.is_empty():
+        return
+
     prints("Opening note...")
     if note_name == current_note.get_basename():
         return
@@ -418,9 +424,9 @@ func _on_note_button_open_note(note_name): # {{{
     edit_note.emit(file.get_as_text())
     note_changed.emit(title)
     current_note = path
-# }}}
 
-func _on_note_button_delete_note(note_name): # {{{
+
+func _on_note_button_delete_note(note_name): 
     var path = make_note_path(note_name)
     var res = DirAccess.remove_absolute(path)
 
@@ -455,10 +461,10 @@ func _on_note_button_delete_note(note_name): # {{{
 
         _on_note_button_open_note(c.note_name)
         return
-# }}}
 
 
-func _on_text_editor_save_note(note_contents):  # {{{
+
+func _on_text_editor_save_note(note_contents):  
     prints("Saving note...")
 
     if current_note.is_empty():
@@ -504,6 +510,6 @@ func _on_text_editor_save_note(note_contents):  # {{{
     notif.message = "Note saved!"
     notif.duration = 1.20
     get_tree().root.get_node("Main").add_child(notif)
-# }}}
+
 
 

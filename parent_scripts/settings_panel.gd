@@ -10,7 +10,7 @@ var represents_node: String = ""
 var settings: Settings
 
 
-func set_setting(key: String, val) -> void:
+func set_setting(key: String, val) -> void: 
     var node_name = key.to_pascal_case()
     var node = get_node_or_null("ScrollContainer/GridContainer/%s" % node_name)
 
@@ -32,3 +32,4 @@ func set_setting(key: String, val) -> void:
 
     elif node is Button:
         node.text = str(val)
+

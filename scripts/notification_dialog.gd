@@ -21,7 +21,7 @@ var duration := 1.0
 var type := NotificationType.NORMAL
 
 
-func _ready() -> void: # {{{
+func _ready() -> void: 
     progress_bar.max_value = duration
     timer.wait_time = duration
 
@@ -49,7 +49,7 @@ func _ready() -> void: # {{{
     style = progress_bar.get_theme_stylebox("fill")
     color.a = style.bg_color.a
     style.bg_color = color
-# }}}
+
 
 func _process(_delta: float) -> void:
     if !timer.is_stopped():

@@ -23,14 +23,14 @@ var open_settings_popup := false
 var warning_popup_open := false
 
 
-func _ready() -> void: # {{{
+func _ready() -> void: 
     title.text = note_name
     date.text = creation_date
     var dt = creation_date.split(',')
     date.visible_characters = len(dt[0])
-# }}}
 
-func _process(_delta: float) -> void: # {{{
+
+func _process(_delta: float) -> void: 
     if !has_node("NoteButtonSettingsPopup"):
         return
 
@@ -44,40 +44,40 @@ func _process(_delta: float) -> void: # {{{
 
     elif !open_settings_popup and settings_popup_open:
         settings_popup.close(down)
-# }}}
 
-func initialize(_name, _date, _date_format): # {{{
+
+func initialize(_name, _date, _date_format): 
     note_name = _name
     name = _name
 
     creation_date = _date
     current_date_format = _date_format
-# }}}
 
-func set_note_name(new_name: String): # {{{
+
+func set_note_name(new_name: String): 
     title.text = new_name
     note_name = new_name
     name = new_name
-# }}}
 
-func get_settings(): # {{{
+
+func get_settings(): 
     return {
         "creation_date" : creation_date,
         "current_date_format" : current_date_format,
     }
-# }}}
 
-func reload_settings(): # {{{
+
+func reload_settings(): 
     date.text = creation_date
     var dt = creation_date.split(',')
 
     # Forces text to update
     date.visible_characters = 2
     date.visible_characters = len(dt[0])
-# }}}
 
 
-func toggle_settings_popup() -> void: # {{{
+
+func toggle_settings_popup() -> void: 
     # $HBoxContainer/NoteSettingsButton.disabled = true
     open_settings_popup = !open_settings_popup
     if !open_settings_popup:
@@ -89,26 +89,26 @@ func toggle_settings_popup() -> void: # {{{
     settings_popup.get_node("AnimationPlayer").animation_finished.connect(_on_animation_player_animation_finished)
     settings_popup.rename.connect(_on_note_button_settings_popup_rename)
     settings_popup.delete.connect(_on_note_button_settings_popup_delete)
-# }}}
 
-func _on_pressed() -> void: # {{{
+
+func _on_pressed() -> void: 
     open_note.emit(note_name)
-# }}}
 
-func _on_focus_exited() -> void: # {{{
+
+func _on_focus_exited() -> void: 
     if settings_popup_open:
         toggle_settings_popup()
-# }}}
 
-func _on_gui_input(event: InputEvent) -> void: # {{{
+
+func _on_gui_input(event: InputEvent) -> void: 
     var r_click = InputEventMouseButton.new()
     r_click.button_index = MOUSE_BUTTON_RIGHT
 
     if event.is_match(r_click) and event.is_released():
         toggle_settings_popup()
-# }}}
 
-func _on_animation_player_animation_finished(anim_name: StringName) -> void: # {{{
+
+func _on_animation_player_animation_finished(anim_name: StringName) -> void: 
     match anim_name:
         "open", "open_down":
             # $HBoxContainer/NoteSettingsButton.disabled = false
@@ -123,30 +123,30 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void: # {
             # $HBoxContainer/NoteSettingsButton.disabled = false
             settings_popup_open = false
             settings_popup.queue_free()
-# }}}
 
 
-func _on_title_gui_input(event: InputEvent) -> void: # {{{
+
+func _on_title_gui_input(event: InputEvent) -> void: 
     var l_click = InputEventMouseButton.new()
     l_click.button_index = MOUSE_BUTTON_LEFT
 
     if event.is_match(l_click) and event.double_click:
         title.editable = true
         title.grab_focus()
-# }}}
 
-func _on_title_text_changed(new_text: String) -> void: # {{{
+
+func _on_title_text_changed(new_text: String) -> void: 
     title.expand_to_text_length = len(new_text) <= TITLE_MAX_CHARACTERS
     title.custom_minimum_size = Vector2(138, 0)
-# }}}
 
-func _on_title_text_submitted(new_text: String) -> void: # {{{
+
+func _on_title_text_submitted(new_text: String) -> void: 
     title.editable = false
     rename_note.emit(note_name, new_text)
-# }}}
 
 
-func _on_note_button_settings_popup_delete() -> void: # {{{
+
+func _on_note_button_settings_popup_delete() -> void: 
     toggle_settings_popup()
 
     var confirm_dialog = ConfirmationDialog.new()
@@ -165,19 +165,19 @@ func _on_note_button_settings_popup_delete() -> void: # {{{
     for c in confirm_dialog.get_children(true):
         if c is Panel: c.remove_theme_stylebox_override("panel")
         if c is Label: c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-# }}}
 
-func _on_confirm_dialog_confirm(): # {{{
+
+func _on_confirm_dialog_confirm(): 
     delete_note.emit(note_name)
-# }}}
 
-func _on_note_button_settings_popup_rename() -> void: # {{{
+
+func _on_note_button_settings_popup_rename() -> void: 
     toggle_settings_popup()
     title.editable = true
     title.grab_focus()
-# }}}
 
-func _on_note_button_settings_popup_focus_exited() -> void: # {{{
+
+func _on_note_button_settings_popup_focus_exited() -> void: 
     toggle_settings_popup()
-# }}}
+
 

@@ -17,7 +17,7 @@ var selected_font := "":
         line_edit.text = str(val)
 
 
-func _ready() -> void: # {{{
+func _ready() -> void: 
     close_requested.connect(_on_cancel_pressed)
     var os_name = OS.get_name().to_lower()
 
@@ -28,9 +28,9 @@ func _ready() -> void: # {{{
 
     var fonts = get_font_names(fonts_directory)
     create_font_buttons(fonts)
-# }}}
 
-func get_font_names(fonts_dir: String) -> Array: # {{{
+
+func get_font_names(fonts_dir: String) -> Array: 
     var dir = DirAccess.open(fonts_dir)
     if dir == null:
         var err  = DirAccess.get_open_error()
@@ -50,9 +50,9 @@ func get_font_names(fonts_dir: String) -> Array: # {{{
 
     files.sort()
     return files
-# }}}
 
-func create_font_buttons(fonts) -> void: # {{{
+
+func create_font_buttons(fonts) -> void: 
     for c in font_button_cont.get_children():
         c.pressed.connect(_on_font_button_pressed.bind(c.text))
         c.gui_input.connect(_on_font_button_gui_input)
@@ -70,16 +70,16 @@ func create_font_buttons(fonts) -> void: # {{{
 
         b.pressed.connect(_on_font_button_pressed.bind(b.text))
         b.gui_input.connect(_on_font_button_gui_input)
-# }}}
 
 
-func _on_line_edit_text_changed(new_text: String) -> void: # {{{
+
+func _on_line_edit_text_changed(new_text: String) -> void: 
     new_text = new_text.strip_edges()
     for c in font_button_cont.get_children():
         c.visible = new_text in c.text || new_text.is_empty()
-# }}}
 
-func _on_line_edit_text_submited(new_text: String) -> void: # {{{
+
+func _on_line_edit_text_submited(new_text: String) -> void: 
     new_text = new_text.to_lower()
 
     for c in font_button_cont.get_children():
@@ -101,27 +101,27 @@ func _on_line_edit_text_submited(new_text: String) -> void: # {{{
         notif.duration = 5
 
         get_tree().root.get_node("Main").add_child(notif)
-# }}}
 
-func _on_font_button_pressed(font_name: String) -> void: # {{{
+
+func _on_font_button_pressed(font_name: String) -> void: 
     if "System default" in font_name:
         var v = font_name.split(" ")
         font_name = v[0].to_lower()
 
     selected_font = font_name
-# }}}
 
-func _on_font_button_gui_input(event: InputEvent): # {{{
+
+func _on_font_button_gui_input(event: InputEvent): 
     if event is InputEventMouseButton and event.double_click:
         _on_line_edit_text_submited(selected_font)
-# }}}
 
 
-func _on_cancel_pressed() -> void: # {{{
+
+func _on_cancel_pressed() -> void: 
     queue_free()
-# }}}
 
-func _on_select_pressed() -> void: # {{{
+
+func _on_select_pressed() -> void: 
     font_selected.emit(selected_font)
     queue_free()
-# }}}
+
