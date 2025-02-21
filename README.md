@@ -11,8 +11,8 @@ https://github.com/user-attachments/assets/2da8276e-2b3c-401b-98ea-91321a81c893
 ## Features
 
 - [x] Basics (create, edit, save notes)
-- [ ] Vi mode
-- [ ] More keyboard shortcuts
+- [x] Basic Vim mode
+- [ ] Editable keyboard shortcuts
 
 ## Download
 
