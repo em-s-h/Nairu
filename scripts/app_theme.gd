@@ -93,23 +93,22 @@ func reload_settings():
 
     # Fix edge cases
     # Code edit
-    var a =  theme.get_color("background_color", "CodeEdit").a
+    # background
     var c = theme_background
 
-    c.a = a
+    c.a = theme.get_color("background_color", "CodeEdit").a
     theme.set_color("background_color", "CodeEdit", c)
 
-    a = theme.get_color("font_selected_color", "CodeEdit").a
-    c.a = a
+    c.a = theme.get_color("font_selected_color", "CodeEdit").a
     theme.set_color("font_selected_color", "CodeEdit", c)
 
-    a = theme.get_color("selection_color", "CodeEdit").a
+    # font
     c = theme_font_color
-    c.a = a
+
+    c.a = theme.get_color("selection_color", "CodeEdit").a
     theme.set_color("selection_color", "CodeEdit", c)
 
-    a = theme.get_color("line_number_color", "CodeEdit").a
-    c.a = a
+    c.a = theme.get_color("line_number_color", "CodeEdit").a
     theme.set_color("line_number_color", "CodeEdit", c)
 
     # Link button
