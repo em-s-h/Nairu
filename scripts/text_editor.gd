@@ -28,6 +28,7 @@ enum VimAction {
     DELETE,
     DELETE_AND_INSERT,
     YANK,
+    REPLACE,
 }
 
 enum VimMotion {
@@ -58,8 +59,19 @@ var pending_action := VimAction.NONE
 var selection_start := Vector2i.ZERO
 var select_lines := false
 
+var undo_redo := UndoRedo.new()
 var contents_changed := false
 var note_open := false
+
+var caret_column: int:
+    get: return get_caret_column()
+    set(val):
+        set_caret_column(val)
+
+var caret_line: int:
+    get: return get_caret_line()
+    set(val):
+        set_caret_line(val)
 
 var current_line_length: int:
     set(_val): printerr("Cannot set line lenght")
@@ -70,11 +82,14 @@ func _cut(caret_index: int) -> void:
     copy(caret_index)
     delete_selection(caret_index)
 
+func _paste(_caret_index: int) -> void:
+    var t := DisplayServer.clipboard_get()
+    var v := Vector2i(caret_column , caret_line)
+    insert_text(t, v.y, v.x)
 
 func _input(_event: InputEvent) -> void: 
     if not _event is InputEventKey:
         return
-
     var event: InputEventKey = _event
 
     if event.is_action_pressed("shortcut_save_note", true):
@@ -87,7 +102,18 @@ func _input(_event: InputEvent) -> void:
     if editor_mode != EditorMode.VIM:
         return
 
-    var caret_pos := Vector2i(get_caret_column(), get_caret_line())
+    var caret_pos := Vector2i(caret_column, caret_line)
+    if event.is_action_pressed("vim_normal_mode", false, true):
+        enable_normal_mode()
+
+    if pending_action == VimAction.REPLACE and event.is_pressed():
+        select(caret_line, caret_column, caret_line, caret_column +1)
+        delete_selection()
+        return
+    elif pending_action == VimAction.REPLACE and event.is_released():
+        set_caret_column(caret_column -1)
+        enable_normal_mode()
+        return
 
     if event.is_action_pressed("vim_yank"):
         if event.ctrl_pressed or vim_mode == VimMode.INSERT or vim_mode == VimMode.COMMAND:
@@ -111,9 +137,6 @@ func _input(_event: InputEvent) -> void:
         enable_normal_mode()
         command_line.text = "yank!"
 
-    if event.is_action_pressed("vim_normal_mode", false, true):
-        enable_normal_mode()
-
     var can_move = vim_mode == VimMode.NORMAL or vim_mode == VimMode.VISUAL
     if event.is_action_pressed("vim_up", true, true) and can_move:
         move_cursor(Vector2i.UP)
@@ -125,7 +148,13 @@ func _input(_event: InputEvent) -> void:
     elif event.is_action_pressed("vim_right", true, true) and can_move:
         move_cursor(Vector2i.RIGHT)
 
-    if vim_mode != VimMode.NORMAL or event.ctrl_pressed:
+    if vim_mode != VimMode.NORMAL:
+        return
+
+    if event.is_action_pressed("vim_redo", true, true) and undo_redo.has_redo():
+        undo_redo.redo()
+
+    if event.ctrl_pressed:
         return
 
     if event.is_action_released("vim_insert_mode"):
@@ -138,8 +167,8 @@ func _input(_event: InputEvent) -> void:
         if event.shift_pressed:
             c = current_line_length
 
-        set_caret_column(c)
         enable_insert_mode()
+        set_caret_column(c)
 
     elif event.is_action_released("vim_delete_and_insert"):
         if event.shift_pressed:
@@ -150,10 +179,22 @@ func _input(_event: InputEvent) -> void:
         elif pending_action == VimAction.DELETE_AND_INSERT:
             select(caret_pos.y, 0, caret_pos.y, current_line_length)
 
+        enable_insert_mode()
         cut()
+
+    elif event.is_action_released("vim_new_line_insert"):
+        # New line is empty, no need to set caret column.
+        var y = 0 if event.shift_pressed else 1
         enable_insert_mode()
 
+        insert_text("\n", caret_pos.y + y, 0)
+        set_caret_line(caret_pos.y + y)
+
+
     elif event.is_action_pressed("vim_delete"):
+        if pending_action == VimAction.DELETE or event.shift_pressed:
+            start_undo_redo_action()
+
         if event.shift_pressed:
             select(caret_pos.y, caret_pos.x, caret_pos.y, current_line_length)
         elif pending_action != VimAction.DELETE:
@@ -161,6 +202,8 @@ func _input(_event: InputEvent) -> void:
             return
         elif pending_action == VimAction.DELETE:
             select(caret_pos.y, 0, caret_pos.y + 1, 0)
+            if get_line_count() == 1:
+                select(caret_pos.y, 0, caret_pos.y, current_line_length)
 
         cut()
         enable_normal_mode()
@@ -171,13 +214,33 @@ func _input(_event: InputEvent) -> void:
         else:
             select(caret_pos.y, caret_pos.x, caret_pos.y, caret_pos.x + 1)
 
+        start_undo_redo_action()
         cut()
         enable_normal_mode()
 
-    elif event.is_action_pressed("vim_undo", true, true) and has_undo():
-        undo()
-    elif event.is_action_pressed("vim_redo", true, true) and has_redo():
-        redo()
+
+    elif event.is_action_released("vim_replace"):
+        if pending_action == VimAction.REPLACE:
+            return
+
+        enable_insert_mode()
+        pending_action = VimAction.REPLACE
+        command_line.text = "-- REPLACE --"
+
+    elif event.is_action_pressed("vim_paste", true):
+        start_undo_redo_action()
+        if !event.shift_pressed:
+            set_caret_column(caret_pos.x + 1)
+
+        paste()
+        if !event.shift_pressed:
+            set_caret_column(caret_pos.x + len(DisplayServer.clipboard_get()))
+        else:
+            set_caret_column(caret_column - 1)
+        end_undo_redo_action()
+
+    elif event.is_action_pressed("vim_undo", true, true) and undo_redo.has_undo():
+        undo_redo.undo()
 
     elif event.is_action_pressed("vim_motion_e", true):
         process_motion(VimMotion.WORD_END_FORWARD)
@@ -185,6 +248,7 @@ func _input(_event: InputEvent) -> void:
         process_motion(VimMotion.WORD_BACK)
     elif event.is_action_pressed("vim_motion_w", true):
         process_motion(VimMotion.WORD_FORWARD)
+
     elif event.is_action_pressed("vim_motion_start_of_line"):
         set_caret_column(0)
     elif event.is_action_pressed("vim_motion_end_of_line"):
@@ -286,7 +350,6 @@ func process_motion(motion: VimMotion) -> void:
         set_caret_line(get_caret_line() + 1)
         set_caret_column(0)
 
-
 func move_cursor(dir: Vector2i) -> void: 
     var col := get_caret_column() + dir.x
     var line := get_caret_line() + dir.y
@@ -315,18 +378,31 @@ func enable_normal_mode() -> void:
     deselect()
     grab_focus()
 
+    end_undo_redo_action()
     caret_type = CaretType.CARET_TYPE_BLOCK
     pending_action = VimAction.NONE
     vim_mode = VimMode.NORMAL
     editable = false
 
-
 func enable_insert_mode() -> void: 
+    start_undo_redo_action()
     command_line.text = "-- INSERT --"
     caret_type = CaretType.CARET_TYPE_LINE
     vim_mode = VimMode.INSERT
     editable = true
 
+
+func end_undo_redo_action() -> void:
+    undo_redo.add_do_property(self, "text", text)
+    undo_redo.add_do_property(self, "caret_column", caret_column)
+    undo_redo.add_do_property(self, "caret_line", caret_line)
+    undo_redo.commit_action(false)
+
+func start_undo_redo_action() -> void:
+    undo_redo.create_action("act%s", undo_redo.get_history_count())
+    undo_redo.add_undo_property(self, "text", text)
+    undo_redo.add_undo_property(self, "caret_column", caret_column)
+    undo_redo.add_undo_property(self, "caret_line", caret_line)
 
 
 func _on_command_line_text_submitted(new_text: String) -> void: 
@@ -352,7 +428,6 @@ func _on_command_line_text_submitted(new_text: String) -> void:
             command_line.text = "Command '%s' not found" % new_text
 
     enable_normal_mode()
-
 
 func _on_command_line_command_cancelled() -> void: 
     vim_mode = VimMode.NORMAL
