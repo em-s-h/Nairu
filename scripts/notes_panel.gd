@@ -12,21 +12,21 @@ const DEFAULT_NOTE_SORT             := NoteSort.DATE_ASCENDING
 
 # Enums
 enum DateFormat {
-YEAR_MONTH_DAY,
-DAY_MONTH_YEAR,
+    YEAR_MONTH_DAY,
+    DAY_MONTH_YEAR,
 }
 
 enum NoteSort {
-DATE_DESCENDING,
-DATE_ASCENDING,
-NAME_DESCENDING,
-NAME_ASCENDING,
+    DATE_DESCENDING,
+    DATE_ASCENDING,
+    NAME_DESCENDING,
+    NAME_ASCENDING,
 }
 
 enum BackupOptions {
-OFF,
-ON_APP_OPEN,
-ON_APP_CLOSE,
+    OFF,
+    ON_APP_OPEN,
+    ON_APP_CLOSE,
 }
 
 
@@ -110,7 +110,6 @@ func open_last_edited_note() -> bool:
 
     return true
 
-
 func create_notes_backup() -> void: 
     create_note_dirs()
     var warn = func(mesg: String):
@@ -184,7 +183,6 @@ func create_notes_backup() -> void:
 
     ziper.close()
 
-
 func create_note_dirs() -> void: 
     var dir = DirAccess.open("user://")
 
@@ -193,7 +191,6 @@ func create_note_dirs() -> void:
 
     if !dir.dir_exists("./notes"):
         dir.make_dir("./notes")
-
 
 func sort_notes(): 
     var notes = []
@@ -218,7 +215,6 @@ func sort_notes():
         notes_container.add_child(n)
 
 
-
 func get_settings(): 
     return {
         "backup_directory" : backup_directory,
@@ -231,11 +227,9 @@ func get_settings():
         "keep_open" : keep_open,
     }
 
-
 func reload_settings(): 
     $VBoxContainer/Opts/VBoxContainer/Sort.select(note_sort as int)
     sort_notes()
-
 
 func get_default_setting(setting_name: String): 
     match setting_name:
@@ -247,7 +241,6 @@ func get_default_setting(setting_name: String):
         "open_previous_note"    : return DEFAULT_OPEN_PREVIOUS_NOTE
         "keep_open"             : return DEFAULT_KEEP_OPEN
         _                       : return ERR_DOES_NOT_EXIST
-
 
 
 func make_note_path(n_name: String) -> String: return str(note_directory, "/", n_name, ".txt")
@@ -264,6 +257,7 @@ func format_date(date: String, from: DateFormat, to: DateFormat) -> String:
     if from == to:
         return "/".join(dt)
 
+    # date: "30/10/2020,24:30:30"
     # dt: ['30', '10', '2020,24:30:30']
     var tmp = dt[-1].split(',')
 
@@ -279,9 +273,7 @@ func format_date(date: String, from: DateFormat, to: DateFormat) -> String:
 
     var out = "/".join(dt)
     out += "," + time
-
     return out
-
 
 
 func _on_create_pressed(contents: String = "") -> void: 
@@ -315,11 +307,9 @@ func _on_create_pressed(contents: String = "") -> void:
 
     _on_note_button_open_note(note.get_file())
 
-
 func _on_sort_item_selected(index: int) -> void: 
     note_sort = $VBoxContainer/Opts/VBoxContainer/Sort.get_item_id(index) as NoteSort
     sort_notes()
-
 
 
 func _on_note_button_rename_note(old_name, new_name: String): 
@@ -364,7 +354,6 @@ func _on_note_button_rename_note(old_name, new_name: String):
         current_note = make_note_path(new_name)
         note_changed.emit(new_name)
     sort_notes()
-
 
 func _on_note_button_open_note(note_name): 
     if note_name.is_empty():
@@ -425,7 +414,6 @@ func _on_note_button_open_note(note_name):
     note_changed.emit(title)
     current_note = path
 
-
 func _on_note_button_delete_note(note_name): 
     var path = make_note_path(note_name)
     var res = DirAccess.remove_absolute(path)
@@ -461,7 +449,6 @@ func _on_note_button_delete_note(note_name):
 
         _on_note_button_open_note(c.note_name)
         return
-
 
 
 func _on_text_editor_save_note(note_contents):  

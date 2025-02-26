@@ -65,13 +65,11 @@ var note_open := false
 
 var caret_column: int:
     get: return get_caret_column()
-    set(val):
-        set_caret_column(val)
+    set(_val): printerr("Use `set_caret_column`")
 
 var caret_line: int:
     get: return get_caret_line()
-    set(val):
-        set_caret_line(val)
+    set(_val): printerr("Use `set_caret_line`")
 
 var current_line_length: int:
     set(_val): printerr("Cannot set line lenght")
@@ -139,14 +137,21 @@ func _input(_event: InputEvent) -> void:
 
     var can_move = vim_mode == VimMode.NORMAL or vim_mode == VimMode.VISUAL
     if event.is_action_pressed("vim_up", true, true) and can_move:
-        move_cursor(Vector2i.UP)
+        move_caret(Vector2i.UP)
     elif event.is_action_pressed("vim_down", true, true) and can_move:
-        move_cursor(Vector2i.DOWN)
+        move_caret(Vector2i.DOWN)
 
     elif event.is_action_pressed("vim_left", true, true) and can_move:
-        move_cursor(Vector2i.LEFT)
+        move_caret(Vector2i.LEFT)
     elif event.is_action_pressed("vim_right", true, true) and can_move:
-        move_cursor(Vector2i.RIGHT)
+        move_caret(Vector2i.RIGHT)
+
+    elif event.is_action_pressed("vim_motion_e", true) and can_move:
+        process_motion(VimMotion.WORD_END_FORWARD)
+    elif event.is_action_pressed("vim_motion_b", true) and can_move:
+        process_motion(VimMotion.WORD_BACK)
+    elif event.is_action_pressed("vim_motion_w", true) and can_move:
+        process_motion(VimMotion.WORD_FORWARD)
 
     if vim_mode != VimMode.NORMAL:
         return
@@ -184,11 +189,12 @@ func _input(_event: InputEvent) -> void:
 
     elif event.is_action_released("vim_new_line_insert"):
         # New line is empty, no need to set caret column.
-        var y = 0 if event.shift_pressed else 1
+        var x = 0 if event.shift_pressed else current_line_length
         enable_insert_mode()
 
-        insert_text("\n", caret_pos.y + y, 0)
-        set_caret_line(caret_pos.y + y)
+        insert_text("\n", caret_pos.y, x)
+        if !event.shift_pressed:
+            set_caret_line(caret_pos.y + 1)
 
 
     elif event.is_action_pressed("vim_delete"):
@@ -197,13 +203,20 @@ func _input(_event: InputEvent) -> void:
 
         if event.shift_pressed:
             select(caret_pos.y, caret_pos.x, caret_pos.y, current_line_length)
+            cut()
+            enable_normal_mode()
+            return
         elif pending_action != VimAction.DELETE:
             pending_action = VimAction.DELETE
             return
-        elif pending_action == VimAction.DELETE:
-            select(caret_pos.y, 0, caret_pos.y + 1, 0)
-            if get_line_count() == 1:
-                select(caret_pos.y, 0, caret_pos.y, current_line_length)
+        
+        select(caret_pos.y, 0, caret_pos.y + 1, 0)
+        if get_line_count() == 1:
+            select(caret_pos.y, 0, caret_pos.y, current_line_length)
+        elif caret_pos.y == get_line_count() - 1:
+            var l = current_line_length
+            set_caret_line(caret_line - 1)
+            select(caret_line, current_line_length, caret_line + 1, l)
 
         cut()
         enable_normal_mode()
@@ -241,13 +254,6 @@ func _input(_event: InputEvent) -> void:
 
     elif event.is_action_pressed("vim_undo", true, true) and undo_redo.has_undo():
         undo_redo.undo()
-
-    elif event.is_action_pressed("vim_motion_e", true):
-        process_motion(VimMotion.WORD_END_FORWARD)
-    elif event.is_action_pressed("vim_motion_b", true):
-        process_motion(VimMotion.WORD_BACK)
-    elif event.is_action_pressed("vim_motion_w", true):
-        process_motion(VimMotion.WORD_FORWARD)
 
     elif event.is_action_pressed("vim_motion_start_of_line"):
         set_caret_column(0)
@@ -288,7 +294,7 @@ func process_motion(motion: VimMotion) -> void:
         VimMotion.WORD_BACK:        curr_word_start = true
         
     var amnt := 1 if !curr_word_start or next_word_start else -1
-    var pos := Vector2i(get_caret_column(), get_caret_line())
+    var pos := Vector2i(caret_column, caret_line)
 
     var ln_start  = pos.x == 0 and curr_word_start
     var ln_end    = (pos.x == current_line_length - 1 or pos.x == current_line_length) and amnt == 1
@@ -307,7 +313,7 @@ func process_motion(motion: VimMotion) -> void:
             return
 
     var mv_caret := func():
-        var caret_pos = Vector2i(get_caret_column(), get_caret_line())
+        var caret_pos = Vector2i(caret_column, caret_line)
         set_caret_column(caret_pos.x + amnt)
 
         # Can't move caret beyond line limits, so return.
@@ -335,7 +341,7 @@ func process_motion(motion: VimMotion) -> void:
         if !next_word_start:
             continue
 
-        var c = get_caret_column()
+        var c = caret_column
         set_caret_column(c - 1)
         var prev_empty := get_word_under_caret().is_empty()
         set_caret_column(c)
@@ -343,16 +349,32 @@ func process_motion(motion: VimMotion) -> void:
         if prev_empty and !get_word_under_caret().is_empty():
             break
 
-    if get_caret_column() != 0 and !next_word_start:
-        set_caret_column(get_caret_column() + (amnt * -1))
+    if caret_column != 0 and !next_word_start:
+        set_caret_column(caret_column + (amnt * -1))
 
-    if next_word_start and get_caret_column() == current_line_length:
-        set_caret_line(get_caret_line() + 1)
+    if (next_word_start and caret_column == current_line_length) \
+        and caret_line != get_line_count() - 1:
+
+        set_caret_line(caret_line + 1)
         set_caret_column(0)
 
-func move_cursor(dir: Vector2i) -> void: 
-    var col := get_caret_column() + dir.x
-    var line := get_caret_line() + dir.y
+    if vim_mode != VimMode.VISUAL:
+        return
+
+    var start_col = selection_start.x
+    if select_lines:
+        var c = current_line_length if caret_line >= selection_start.y else 0
+        set_caret_column(c)
+        start_col = 0 if caret_line >= selection_start.y else len(get_line(selection_start.y))
+
+    if caret_column < start_col and !select_lines:
+        start_col = selection_start.x + 1
+
+    select(selection_start.y, start_col, caret_line, caret_column)
+
+func move_caret(dir: Vector2i) -> void: 
+    var col := caret_column + dir.x
+    var line := caret_line + dir.y
 
     set_caret_line(line, false, false, -1)
     set_caret_column(col, false)
@@ -392,17 +414,17 @@ func enable_insert_mode() -> void:
     editable = true
 
 
-func end_undo_redo_action() -> void:
-    undo_redo.add_do_property(self, "text", text)
-    undo_redo.add_do_property(self, "caret_column", caret_column)
-    undo_redo.add_do_property(self, "caret_line", caret_line)
-    undo_redo.commit_action(false)
-
 func start_undo_redo_action() -> void:
     undo_redo.create_action("act%s", undo_redo.get_history_count())
     undo_redo.add_undo_property(self, "text", text)
     undo_redo.add_undo_property(self, "caret_column", caret_column)
     undo_redo.add_undo_property(self, "caret_line", caret_line)
+
+func end_undo_redo_action() -> void:
+    undo_redo.add_do_property(self, "text", text)
+    undo_redo.add_do_property(self, "caret_column", caret_column)
+    undo_redo.add_do_property(self, "caret_line", caret_line)
+    undo_redo.commit_action(false)
 
 
 func _on_command_line_text_submitted(new_text: String) -> void: 
