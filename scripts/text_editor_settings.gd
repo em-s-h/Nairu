@@ -58,11 +58,6 @@ func _on_auto_save_toggled(toggled_on: bool) -> void:
     setting_changed.emit("auto_save", toggled_on)
 
 
-func _on_editor_mode_item_selected(index: int) -> void: 
-    $ScrollContainer/GridContainer/EditorMode.release_focus()
-    setting_changed.emit("editor_mode", index)
-
-
 
 func _on_settings_changed(key: String, val) -> void: 
     var def_set = settings.get_default_setting(key, represents_node)
@@ -101,7 +96,6 @@ func _on_load_default_setting_pressed(setting_name: String) -> void:
 
         "font_size": _on_font_size_text_submitted(str(def_set))
         "line_spacing": _on_line_spacing_text_submitted(str(def_set))
-        "editor_mode": _on_editor_mode_item_selected(def_set)
 
 
 func show_load_default_button(setting_name: String, _show: bool) -> void: 
@@ -115,7 +109,4 @@ func show_load_default_button(setting_name: String, _show: bool) -> void:
 
         "line_spacing": 
             $ScrollContainer/GridContainer/LoadDefaultLineSpacing.self_modulate.a = a
-
-        "editor_mode":
-            $ScrollContainer/GridContainer/LoadDefaultEditorMode.self_modulate.a = a
 

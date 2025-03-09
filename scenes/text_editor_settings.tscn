@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cuvx8mq52xkhh"]
 
-[ext_resource type="Script" path="res://scripts/text_editor_settings.gd" id="2_d4yq6"]
+[ext_resource type="Script" uid="uid://c81wagiiuef1v" path="res://scripts/text_editor_settings.gd" id="2_d4yq6"]
 [ext_resource type="Texture2D" uid="uid://dahtm5esse8rr" path="res://icons/reload.svg" id="3_iydkc"]
 
 [node name="TextEditorSettings" type="Panel"]
@@ -158,37 +158,6 @@ text = "3"
 alignment = 2
 max_length = 4
 
-[node name="Label6" type="Label" parent="ScrollContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 2
-size_flags_vertical = 6
-text = "Editor mode
-"
-
-[node name="LoadDefaultEditorMode" type="Button" parent="ScrollContainer/GridContainer"]
-self_modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-tooltip_text = "Load default value"
-theme_type_variation = &"IconButton"
-icon = ExtResource("3_iydkc")
-flat = true
-icon_alignment = 1
-expand_icon = true
-
-[node name="EditorMode" type="OptionButton" parent="ScrollContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 6
-flat = true
-selected = 0
-item_count = 2
-popup/item_0/text = "Normal"
-popup/item_1/text = "Vim"
-popup/item_1/id = 1
-
 [connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultFont" to="." method="_on_load_default_setting_pressed" binds= ["font"]]
 [connection signal="pressed" from="ScrollContainer/GridContainer/Font" to="." method="_on_font_pressed"]
 [connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultFontSize" to="." method="_on_load_default_setting_pressed" binds= ["font_size"]]
@@ -197,5 +166,3 @@ popup/item_1/id = 1
 [connection signal="toggled" from="ScrollContainer/GridContainer/LineNumbers" to="." method="_on_line_numbers_toggled"]
 [connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultLineSpacing" to="." method="_on_load_default_setting_pressed" binds= ["line_spacing"]]
 [connection signal="text_submitted" from="ScrollContainer/GridContainer/LineSpacing" to="." method="_on_line_spacing_text_submitted"]
-[connection signal="pressed" from="ScrollContainer/GridContainer/LoadDefaultEditorMode" to="." method="_on_load_default_setting_pressed" binds= ["editor_mode"]]
-[connection signal="item_selected" from="ScrollContainer/GridContainer/EditorMode" to="." method="_on_editor_mode_item_selected"]
