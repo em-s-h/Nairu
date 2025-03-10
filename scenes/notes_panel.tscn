@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://jg1bxsdjljwm"]
 
-[ext_resource type="Script" path="res://scripts/notes_panel.gd" id="1_bq6l0"]
+[ext_resource type="Script" uid="uid://cxjmlee5m7p0w" path="res://scripts/notes_panel.gd" id="1_bq6l0"]
 [ext_resource type="Theme" uid="uid://c5680xpg6t205" path="res://themes/theme.tres" id="1_ucgnq"]
 
 [sub_resource type="Animation" id="Animation_5tbv8"]
@@ -37,8 +37,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xh62g"]
 _data = {
-"RESET": SubResource("Animation_5tbv8"),
-"open_panel": SubResource("Animation_qix6a")
+&"RESET": SubResource("Animation_5tbv8"),
+&"open_panel": SubResource("Animation_qix6a")
 }
 
 [node name="NotesPanel" type="Panel" groups=["Persist"]]
@@ -54,7 +54,7 @@ script = ExtResource("1_bq6l0")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_xh62g")
+&"": SubResource("AnimationLibrary_xh62g")
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -103,11 +103,11 @@ icon_alignment = 1
 selected = 0
 item_count = 5
 popup/item_0/text = "Date (new)"
-popup/item_0/id = 1
-popup/item_1/id = 1
+popup/item_0/id = 0
+popup/item_1/id = 50
 popup/item_1/separator = true
 popup/item_2/text = "Date (old)"
-popup/item_2/id = 2
+popup/item_2/id = 1
 popup/item_3/text = "Name (Z-A)"
 popup/item_3/id = 2
 popup/item_4/text = "Name (A-Z)"

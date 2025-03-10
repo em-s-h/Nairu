@@ -16,6 +16,7 @@ var settings_popup
 
 var note_name := ""
 var creation_date := ""
+var datetime_dict: Dictionary
 var current_date_format := NotesPanel.DateFormat.DAY_MONTH_YEAR
 
 var settings_popup_open := false
@@ -48,7 +49,8 @@ func initialize(_name, _date, _date_format):
     note_name = _name
     name = _name
 
-    creation_date = _date
+    datetime_dict = _date
+    creation_date = NotesPanel.format_date(_date, _date_format)
     current_date_format = _date_format
 
 func set_note_name(new_name: String):
@@ -56,24 +58,25 @@ func set_note_name(new_name: String):
     note_name = new_name
     name = new_name
 
+
 func get_settings():
     return {
-        "creation_date" : creation_date,
+        "datetime_dict" : datetime_dict,
         "current_date_format" : current_date_format,
     }
 
 func reload_settings():
-    if creation_date.is_empty():
+    if datetime_dict.is_empty():
         var pa = get_tree().root.get_node("Main/HBoxContainer/NotesPanel")
         if pa == null:
             printerr("This func is called after '_ready' in Main, thus NotesPanel should be loaded.")
 
-        var d = Time.get_date_string_from_system()
-        d += "," + Time.get_time_string_from_system()
-        creation_date = pa.format_date(d, NotesPanel.DateFormat.YEAR_MONTH_DAY, pa.date_format)
+        datetime_dict = Time.get_datetime_dict_from_system()
+        current_date_format = pa.date_format
 
+    creation_date = NotesPanel.format_date(datetime_dict, current_date_format)
     date.text = creation_date
-    var dt = creation_date.split(',')
+    var dt = creation_date.split(' ')
 
     # Forces text to update
     date.visible_characters = 2

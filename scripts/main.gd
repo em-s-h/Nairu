@@ -36,8 +36,13 @@ func _ready() -> void:
     text_editor.save_note.connect(notes_panel._on_text_editor_save_note)
     notes_panel.text_editor = text_editor
 
-    var sav = func(_a): if "*" in title: change_title(title.erase(len(title)-1, 1))
-    var txt = func(): if not "*" in title: change_title("%s*" % title)
+    var sav = func(_a):
+        if "*" in title:
+            change_title(title.erase(len(title)-1, 1))
+
+    var txt = func():
+        if not "*" in title:
+            change_title("%s*" % title)
 
     text_editor.text_changed.connect(txt)
     text_editor.save_note.connect(sav)
@@ -45,13 +50,13 @@ func _ready() -> void:
 
     settings.load_settings()
     notes_panel.open_last_edited_note()
+    notes_panel.sort_notes()
 
     if notes_panel.keep_open:
         _on_notes_panel_button_pressed()
 
     if notes_panel.backup_option == notes_panel.BackupOptions.ON_APP_OPEN:
         notes_panel.create_notes_backup()
-
 
 func _notification(what: int) -> void:
     if what != NOTIFICATION_WM_CLOSE_REQUEST:
@@ -96,7 +101,6 @@ func _notification(what: int) -> void:
 
     get_tree().quit()
 
-
 func _process(delta: float) -> void:
     if open_top_panel and !top_panel_open:
         $AnimationPlayer.play("open_top_panel")
@@ -117,14 +121,12 @@ func _process(delta: float) -> void:
         notes_panel.close_panel()
 
 
-
 func change_title(new_title: String) -> void:
     if new_title.is_empty():
         new_title = "Nairu"
 
     get_window().title = new_title
     title = new_title
-
 
 func resize_window(direction, quant, delta):
     var mode = get_window().mode
@@ -161,7 +163,6 @@ func resize_window(direction, quant, delta):
         new_win_size = clamp(new_win_size, min_size, max_size)
 
         get_window().size = new_win_size
-
 
 func _on_window_size_changed() -> void:
     var mode = get_window().mode

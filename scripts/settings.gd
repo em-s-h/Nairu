@@ -10,11 +10,10 @@ var settings_window: SettingsWindow
 var config: ConfigFile
 
 
-func _ready() -> void: 
+func _ready() -> void:
     config = ConfigFile.new()
 
-
-func open_settings(): 
+func open_settings():
     settings_window = SettingsWindowScene.instantiate()
     add_child(settings_window)
 
@@ -43,14 +42,12 @@ func open_settings():
     settings_window.name = "SettingsWindow"
     settings_window.show()
 
-
-func reload_settings_window() -> void: 
+func reload_settings_window() -> void:
     settings_window.queue_free()
     await get_tree().create_timer(0.1).timeout
     open_settings()
 
-
-func save_settings(): 
+func save_settings():
     config.clear()
     var save_nodes = get_tree().get_nodes_in_group("Persist")
     for node in save_nodes:
@@ -64,8 +61,7 @@ func save_settings():
 
     config.save(CONFIG_PATH)
 
-
-func load_settings(): 
+func load_settings():
     var err = config.load(CONFIG_PATH)
     if err != OK:
         var d = ErrorDialog.new()
@@ -94,8 +90,7 @@ func load_settings():
             node.call("reload_settings")
 
 
-
-func _on_notes_panel_save_note_dates(): 
+func _on_notes_panel_save_note_dates():
     var save_nodes = get_tree().get_nodes_in_group("Persist")
     for node in save_nodes:
         if not node is NoteButton:
@@ -107,8 +102,7 @@ func _on_notes_panel_save_note_dates():
 
     config.save(CONFIG_PATH)
 
-
-func get_default_setting(setting_name: String, from_node: String): 
+func get_default_setting(setting_name: String, from_node: String):
     var p_nodes = get_tree().get_nodes_in_group("Persist")
     for node in p_nodes:
         if node is Settings:
@@ -123,8 +117,7 @@ func get_default_setting(setting_name: String, from_node: String):
 
     return ERR_INVALID_PARAMETER
 
-
-func _on_settings_panel_setting_changed(key: String, val): 
+func _on_settings_panel_setting_changed(key: String, val):
     var err = config.load(CONFIG_PATH)
     if err != OK:
         var d = ErrorDialog.new()
@@ -153,7 +146,6 @@ func _on_settings_panel_setting_changed(key: String, val):
         node.call("reload_settings")
 
     config.save(CONFIG_PATH)
-
 
 func _on_settings_window_close_requested() -> void:
     settings_window.queue_free()

@@ -64,7 +64,7 @@ func _ready() -> void:
             var n_name = f.get_basename()
 
             # As of 20/01/2024 there's no way to get file dates
-            note_button.initialize(n_name, "", date_format)
+            note_button.initialize(n_name, {}, date_format)
             notes_container.add_child(note_button)
 
             note_button.rename_note.connect(_on_note_button_rename_note)
@@ -82,9 +82,51 @@ func _ready() -> void:
 
     note_directory = DEFAULT_NOTE_DIRECTORY
 
+func get_settings(): 
+    return {
+        "backup_directory" : backup_directory,
+        "note_directory" : note_directory,
+        "open_previous_note": open_previous_note,
+        "previous_note" : current_note,
+        "backup_option" : backup_option,
+        "date_format" : date_format,
+        "note_sort" : note_sort,
+        "keep_open" : keep_open,
+    }
 
-## Open the last edited note.
-##
+func reload_settings(): 
+    var idx = note_sort as int
+    if note_sort >= 1: idx += 1
+
+    $VBoxContainer/Opts/VBoxContainer/Sort.select(idx)
+    sort_notes()
+
+func get_default_setting(setting_name: String): 
+    match setting_name:
+        "backup_directory"      : return DEFAULT_NOTE_BACKUP_DIRECTORY
+        "note_directory"        : return DEFAULT_NOTE_DIRECTORY
+        "backup_option"         : return DEFAULT_BACKUP_OPTION
+        "date_format"           : return DEFAULT_DATE_FORMAT
+        "note_sort"             : return DEFAULT_NOTE_SORT
+        "open_previous_note"    : return DEFAULT_OPEN_PREVIOUS_NOTE
+        "keep_open"             : return DEFAULT_KEEP_OPEN
+        _                       : return ERR_DOES_NOT_EXIST
+
+
+static func format_date(d: Dictionary, to: DateFormat) -> String: 
+    if d.is_empty():
+        return ""
+
+    var date := ""
+    match to:
+        DateFormat.YEAR_MONTH_DAY:
+            date = "%s/%s/%s" % [d.year, d.month, d.day]
+        DateFormat.DAY_MONTH_YEAR:
+            date = "%s/%s/%s" % [d.day, d.month, d.year]
+
+    return "%s %s:%s:%s" % [date, d.hour, d.minute, d.second]
+
+
 ## Open the last note being edited before the app was closed,
 ## if no note was being edited returns false.
 func open_last_edited_note() -> bool: 
@@ -192,88 +234,44 @@ func create_note_dirs() -> void:
     if !dir.dir_exists("./notes"):
         dir.make_dir("./notes")
 
+
 func sort_notes(): 
     var notes = []
     for n in notes_container.get_children():
         notes.append(n)
         notes_container.remove_child(n)
 
-    notes.sort_custom(
-    func (a, b):
-        match note_sort:
-            NoteSort.NAME_ASCENDING:
-                return a.note_name.naturalnocasecmp_to(b.note_name) <= 0
-            NoteSort.NAME_DESCENDING:
-                return a.note_name.naturalnocasecmp_to(b.note_name) >= 0
-            NoteSort.DATE_ASCENDING:
-                return a.creation_date.naturalnocasecmp_to(b.creation_date) <= 0
-            NoteSort.DATE_DESCENDING:
-                return a.creation_date.naturalnocasecmp_to(b.creation_date) >= 0
-    )
-
+    notes.sort_custom(_sort)
     for n in notes:
         notes_container.add_child(n)
 
+func _sort(a, b) -> bool:
+    match note_sort:
+        NoteSort.NAME_ASCENDING:
+            return a.note_name.naturalnocasecmp_to(b.note_name) <= 0
+        NoteSort.NAME_DESCENDING:
+            return a.note_name.naturalnocasecmp_to(b.note_name) >= 0
+        NoteSort.DATE_ASCENDING:
+            if a.datetime_dict.is_empty():
+                return true
 
-func get_settings(): 
-    return {
-        "backup_directory" : backup_directory,
-        "note_directory" : note_directory,
-        "open_previous_note": open_previous_note,
-        "previous_note" : current_note,
-        "backup_option" : backup_option,
-        "date_format" : date_format,
-        "note_sort" : note_sort,
-        "keep_open" : keep_open,
-    }
+            var ua = Time.get_unix_time_from_datetime_dict(a.datetime_dict)
+            var ub = Time.get_unix_time_from_datetime_dict(b.datetime_dict)
+            return ua <= ub
+        NoteSort.DATE_DESCENDING:
+            if a.datetime_dict.is_empty():
+                return true
 
-func reload_settings(): 
-    $VBoxContainer/Opts/VBoxContainer/Sort.select(note_sort as int)
-    sort_notes()
+            var ua = Time.get_unix_time_from_datetime_dict(a.datetime_dict)
+            var ub = Time.get_unix_time_from_datetime_dict(b.datetime_dict)
+            return ua >= ub
 
-func get_default_setting(setting_name: String): 
-    match setting_name:
-        "backup_directory"      : return DEFAULT_NOTE_BACKUP_DIRECTORY
-        "note_directory"        : return DEFAULT_NOTE_DIRECTORY
-        "backup_option"         : return DEFAULT_BACKUP_OPTION
-        "date_format"           : return DEFAULT_DATE_FORMAT
-        "note_sort"             : return DEFAULT_NOTE_SORT
-        "open_previous_note"    : return DEFAULT_OPEN_PREVIOUS_NOTE
-        "keep_open"             : return DEFAULT_KEEP_OPEN
-        _                       : return ERR_DOES_NOT_EXIST
+        _: return true
 
 
 func make_note_path(n_name: String) -> String: return str(note_directory, "/", n_name, ".txt")
 func open_panel(): $AnimationPlayer.play("open_panel")
 func close_panel(): $AnimationPlayer.play_backwards("open_panel")
-
-func format_date(date: String, from: DateFormat, to: DateFormat) -> String: 
-    var dt: Array
-    if "-" in date:
-        dt = date.split("-")
-    else:
-        dt = date.split("/")
-
-    if from == to:
-        return "/".join(dt)
-
-    # date: "30/10/2020,24:30:30"
-    # dt: ['30', '10', '2020,24:30:30']
-    var tmp = dt[-1].split(',')
-
-    # dt: ['30', '10']
-    dt.pop_back()
-
-    # dt: ['30', '10', '20']
-    dt.append(tmp[0])
-    var time = tmp[1]
-
-    # There are only 2 options, and they mirror each other: YMD DMY
-    dt.reverse()
-
-    var out = "/".join(dt)
-    out += "," + time
-    return out
 
 
 func _on_create_pressed(contents: String = "") -> void: 
@@ -292,10 +290,8 @@ func _on_create_pressed(contents: String = "") -> void:
     file.close()
 
     var note_button = NoteButtonScene.instantiate()
-    var date = Time.get_date_string_from_system()
-    date += "," + Time.get_time_string_from_system()
+    var date = Time.get_datetime_dict_from_system()
 
-    date = format_date(date, DateFormat.YEAR_MONTH_DAY, date_format)
     note_button.initialize(note.get_file(), date, date_format)
     notes_container.add_child(note_button)
 
